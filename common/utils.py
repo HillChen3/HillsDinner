@@ -37,9 +37,8 @@ def send_message(phone):
     # 响应 r 的 status_code 值为 200 说明响应成功
     # 否则失败
     if r.status_code == 200:
-        return True
-    else:
-        return False
+        return True, "send SMS successfully to " + phone
+    return False, "send SMS failed to " + phone
 
 
 def verify(phone, code):
@@ -63,3 +62,7 @@ def verify(phone, code):
         return True
     else:
         return False
+
+
+def check_phone_num(phone_num):
+    return True
