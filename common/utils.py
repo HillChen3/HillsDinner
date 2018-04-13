@@ -1,5 +1,6 @@
 import json
 import requests
+import re
 
 # 请求的头部内容
 # 以下的 Id 与 Key 都是无效的仅做示范，在实际试验中请替换成自己的 Id 与 Key
@@ -65,4 +66,8 @@ def verify(phone, code):
 
 
 def check_phone_num(phone_num):
-    return True
+    right_phone_num = re.compile('^1[35789]\d{9}$|^147\d{8}')
+    if right_phone_num.match(phone_num):
+        return True
+    else:
+        return False
