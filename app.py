@@ -1,41 +1,11 @@
 from flask import *
-from func import sms
-
+from flask.ext.restful import Api
+from resource import Register
 app = Flask(__name__)
+api = Api(app)
+api.add_resource(Register.SendSMS, '/register/sendSMS')
+api.add_resource(Register.VerifySMS, '/register/verifySMS')
 
 
-@app.route("/login", methods=['POST', 'GET'])
-def do_login():
-    """
-    进行登录验证
-    :return:
-    """
-    error_msg = None
-    if request.method == 'GET':
-        # 获取 GET 请求参数
-        phone_number = request.args.get('mobile_phone_number')
-        if phone_number is not None:
-            if sms.send_message(phone_number):
-                return render_template('login.html')
-            else:
-                error_msg = 'Failed to get the verification code!'
-    elif request.method == 'POST':
-        phone_number = request.form['phone']
-        code = request.form['code']
-        if code == '':
-            error_msg = 'Please input the verification code!'
-        elif sms.verify(phone_number, code):
-            return redirect(url_for('success'))
-        else:
-            error_msg = 'Your code is wrong, please check again!'
-    return render_template('login.html', error_msg=error_msg)
-
-
-@app.route("/success")
-def success():
-    return render_template('success.html')
-
-
-if __name__ == "__main__":
-    # 在调试模式下启动本地开发服务器
+if __name__ == '__main__':
     app.run(debug=True)
