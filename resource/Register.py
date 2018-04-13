@@ -29,7 +29,7 @@ class SendSMS(Resource):
         # 需要检查电话号码格式
         if utils.check_phone_num(phone_number):
             flag, message = utils.send_message(phone_number)
-            return message, flag if 200 else 400
+            return message, 200 if flag else 400
         return "invalid phone num", 401
 
 
