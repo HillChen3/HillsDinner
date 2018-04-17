@@ -1,4 +1,4 @@
-from flask_restful import Resource, abort, reqparse
+from flask_restplus import Resource, abort, reqparse
 from flask import request
 from common import utils
 
