@@ -1,18 +1,20 @@
 from flask_restful import Resource, abort, reqparse
 from flask import request
-from flask import jsonify
 from common import utils
 
+in_progress = "Interface is still in progress"
 
 APIS = {
     'sendSMS': {'task': 'get PhoneNumber and send the SMS'},
     'verifySMS': {'task': 'verify the SMS code'},
+    'register': {'task': 'register new account'},
+    'login': {'task': 'login in and get token'}
 }
 
 
-def abort_if_todo_doesnt_exist(todo_id):
-    if todo_id not in APIS:
-        abort(404, message="API {} doesn't exist".format(todo_id))
+def abort_if_todo_doesnt_exist(api_id):
+    if api_id not in APIS:
+        abort(404, message="API {} doesn't exist".format(api_id))
 
 
 parser = reqparse.RequestParser()
@@ -20,9 +22,9 @@ parser.add_argument('task', type=str)
 
 
 class SendSMS(Resource):
-    def get(self, todo_id):
-        abort_if_todo_doesnt_exist(todo_id)
-        return APIS[todo_id]
+    def get(self, api_id):
+        abort_if_todo_doesnt_exist(api_id)
+        return APIS[api_id]
 
     def put(self,):
         phone_number = request.form['phone']
@@ -46,4 +48,11 @@ class VerifySMS(Resource):
             return "phone or SMS code is NULL", 401
 
 
+class Register(Resource):
+    def post(self):
+        return in_progress, 200
 
+
+class Login(Register):
+    def get(self):
+        return in_progress, 200
