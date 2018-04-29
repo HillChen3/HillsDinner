@@ -55,4 +55,4 @@ class Register(Resource):
 
 class Login(Register):
     def get(self):
-        return in_progress, 200
+        return in_progress + " get", 200

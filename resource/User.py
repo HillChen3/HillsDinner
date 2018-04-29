@@ -18,8 +18,13 @@ parser = reqparse.RequestParser()
 parser.add_argument('task', type=str)
 
 
+class UserList(Resource):
+    def get(self, group_id):
+        return in_progress, 200
+
+
 class User(Resource):
-    def get(self, page_id):
+    def get(self, user_id):
         return in_progress, 200
 
     def put(self):
