@@ -23,4 +23,4 @@ api.add_resource(GroupNews.GroupNews, '/group_news/<news_id>')
 api.add_resource(GroupNews.GroupNewsList, '/group_news/<group_id>')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True, port=80)
