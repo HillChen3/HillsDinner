@@ -5,7 +5,7 @@ from common import utils
 in_progress = "Interface is still in progress"
 
 APIS = {
-    'group-user-link': {'task': 'follow, like, join, unfollow, unlike, leave'}
+    'session': {'task': 'register login logout etc'},
 }
 
 
@@ -18,17 +18,15 @@ parser = reqparse.RequestParser()
 parser.add_argument('task', type=str)
 
 
-class UserLinkList(Resource):
-    def get(self, user_id):
+class Session(Resource):
+    def put(self):
         return in_progress, 200
 
+    def get(self):
+        return in_progress + " get", 200
 
-class GroupUserLink(Resource):
-    def get(self, user_id, group_id):
+    def post(self):
         return in_progress, 200
 
-    def post(self, user_id, group_id):
-        action_type = request.form['action_type']
+    def delete(self):
         return in_progress, 200
-
-

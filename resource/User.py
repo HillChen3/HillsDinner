@@ -44,4 +44,15 @@ class User(Resource):
         return in_progress, 200
 
 
+class GroupUserList(Resource):
+    def get(self, group_id):
+        return in_progress, 200
 
+    def put(self, group_id):
+        return in_progress, 200
+
+
+class GroupUser(Resource):
+    def delete(self, user_id):
+        group_id = reqparse.form['group_id']
+        return in_progress, 200

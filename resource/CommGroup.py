@@ -18,8 +18,8 @@ parser = reqparse.RequestParser()
 parser.add_argument('task', type=str)
 
 
-class Comm_groups(Resource):
-    def get(self, page_id):
+class CommGroupList(Resource):
+    def get(self):
         return in_progress, 200
 
     def put(self):
@@ -32,11 +32,19 @@ class Comm_groups(Resource):
             return in_progress, 200
         return "invalid phone num", 401
 
-    def post(self):
+
+class CommGroup(Resource):
+    def get(self, group_id):
         return in_progress, 200
 
-    def delete(self):
+    def post(self, group_id):
+        return in_progress, 200
+
+    def delete(self, group_id):
         return in_progress, 200
 
 
+class CommGroupByUser(Resource):
+    def get(self, user_id):
+        return in_progress, 200
 
