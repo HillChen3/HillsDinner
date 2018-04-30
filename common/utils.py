@@ -67,4 +67,30 @@ def verify(phone, code):
 
 
 def check_phone_num(phone_num):
-    return True
+    if len(phone_num) == 11:
+        return verify_num(phone_num)
+    elif len(phone_num) == 14 or len(phone_num) == 13:
+        if phone_num[0:3] in ("+86", "086"):
+            return verify_num(phone_num[3:])
+        if phone_num[0:2] == "86":
+            return verify_num(phone_num[2:])
+    return False
+
+
+cn_mobile = [134, 135, 136, 137, 138, 139, 150, 151, 152,
+             157, 158, 159, 182, 183, 184, 187, 188, 147, 178, 1705]
+cn_union = [130, 131, 132, 155, 156, 185, 186, 145, 176, 1709]
+cn_tel = [133, 153, 180, 181, 189, 177, 1700]
+
+
+def verify_num(phone_num):
+    v_number = int(phone_num)
+
+    cnm = v_number in cn_mobile  # 验证为移动
+    cnu = v_number in cn_union  # 验证为联通
+    cnt = v_number in cn_tel  # 验证为电信
+
+    if cnm or cnu or cnt:
+        return True
+    else:
+        return False
