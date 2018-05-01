@@ -1,39 +1,28 @@
-import hashlib
-import time
+from flask import Flask
+from flask_restplus import Api
+from common import wechat
+from resource import Session, User, CommGroup, GroupUserLink, GroupUserVerify, GroupNews, SMS
 
-import xml.etree.ElementTree as ET
-from flask import *
-from flask.ext.restful import Api
-from resource import Register
+
 app = Flask(__name__)
 api = Api(app)
-api.add_resource(Register.SendSMS, '/register/sendSMS')
-api.add_resource(Register.VerifySMS, '/register/verifySMS')
+api.add_resource(wechat.SetWechat, "/wechat/setwechat")
+api.add_resource(SMS.SendSMS, '/SMS/<phone_num>')
+api.add_resource(SMS.VerifySMS, '/SMS/<verify_code>,<phone_num>')
+api.add_resource(Session.Session, '/session')
+api.add_resource(User.User, '/user/<user_id>')
+api.add_resource(User.UserList, '/user/<group_id>')
+api.add_resource(CommGroup.CommGroup, '/group/<group_id>')
+api.add_resource(CommGroup.CommGroupList, '/group')
+api.add_resource(CommGroup.CommGroupByUser, '/user/<user_id>/group')
+api.add_resource(User.GroupUser, '/group/<group_id>/user/<user_id>')
+api.add_resource(User.GroupUserList, '/group/<group_id>/user')
+api.add_resource(GroupUserLink.UserLinkList, '/group_user_link/<user_id>')
+api.add_resource(GroupUserLink.GroupUserLink, '/group_user_link/<user_id>,<group_id>')
+api.add_resource(GroupUserVerify.Group_User_Verify, '/group_user_verify/<verify_id>')
+api.add_resource(GroupUserVerify.Group_User_Verify_List, '/group_user_verify/<group_id>/list')
+api.add_resource(GroupNews.GroupNews, '/group_news/<news_id>')
+api.add_resource(GroupNews.GroupNewsList, '/group_news/<group_id>')
 
-@app.route('/',methods=['GET','POST'])
-def wechat_auth():
-    if request.method == 'GET':
-        token='hill2018' #微信配置所需的token
-        data = request.args
-        signature = data.get('signature','')
-        timestamp = data.get('timestamp','')
-        nonce = data.get('nonce','')
-        echostr = data.get('echostr','')
-        s = [timestamp,nonce,token]
-        s.sort()
-        s = ''.join(s)
-        if (hashlib.sha1(s).hexdigest() == signature):
-            return make_response(echostr)
-    else:
-        rec = request.stream.read()
-        xml_rec = ET.fromstring(rec)
-        tou = xml_rec.find('ToUserName').text
-        fromu = xml_rec.find('FromUserName').text
-        content = xml_rec.find('Content').text
-        xml_rep = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>"
-        response = make_response(xml_rep % (fromu,tou,str(int(time.time())), content))
-        response.content_type='application/xml'
-        return response
-    return 'Hello weixin!'
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True, port=80)
