@@ -3,7 +3,11 @@ from flask_restplus import Api, fields, Resource, reqparse
 from resource import Session, User, CommGroup, GroupUserLink, GroupUserVerify, GroupNews, SMS
 
 app = Flask(__name__)
-api = Api(app)
+api = Api(title='ace-youth',
+          version='0.1',
+          description='restful api for ace-youth',
+          # All API metadatas
+          )
 
 api.add_resource(SMS.SendSMS, '/SMS/<phone_num>')
 api.add_resource(SMS.VerifySMS, '/SMS/<verify_code>,<phone_num>')
@@ -22,15 +26,16 @@ api.add_resource(GroupUserVerify.Group_User_Verify_List, '/group_user_verify/<gr
 api.add_resource(GroupNews.GroupNews, '/group_news/<news_id>')
 api.add_resource(GroupNews.GroupNewsList, '/group_news/<group_id>')
 
-
 template_model = api.model('TempModel',
                            {
-                           'user_name': fields.String,
-                           'password': fields.String
-                       })
-
-
+                               'user_name': fields.String,
+                               'password': fields.String
+                           }) \
+ \
+ \
 @api.route('/Template')
+
+
 class Template(Resource):
     @api.marshal_list_with(template_model)
     @api.doc(params={"user_name": "username", "password": "password"})
