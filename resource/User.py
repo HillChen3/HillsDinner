@@ -1,9 +1,8 @@
-from flask_restplus import Resource, abort, reqparse
-from flask import request
+from flask_restplus import Resource, abort, reqparse, fields, marshal_with
+from flask import request, Flask
 from common import utils
 
 in_progress = "Interface is still in progress"
-
 APIS = {
     'user': {'task': 'manage users'}
 }
@@ -25,9 +24,10 @@ class UserList(Resource):
 
 class User(Resource):
     def get(self, user_id):
+        args = parser.parse_args()
         return in_progress, 200
 
-    def put(self):
+    def put(self, **kwargs):
         username = request.form['username']
         email = reqparse.form['email']
         phone_number = reqparse.form['phone']
