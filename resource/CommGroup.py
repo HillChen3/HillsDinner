@@ -1,8 +1,9 @@
-from flask_restplus import Resource, abort, reqparse
+from flask_restplus import Resource, abort, reqparse, Namespace
 from flask import request
 from common import utils
 
 in_progress = "Interface is still in progress"
+api = Namespace('group', description="group operation")
 
 APIS = {
     'comm-group': {'task': 'manage comm-groups'}
@@ -18,6 +19,7 @@ parser = reqparse.RequestParser()
 parser.add_argument('task', type=str)
 
 
+@api.route('/')
 class CommGroupList(Resource):
     def get(self):
         return in_progress, 200
@@ -33,6 +35,7 @@ class CommGroupList(Resource):
         return "invalid phone num", 401
 
 
+@api.route('/<group_id>')
 class CommGroup(Resource):
     def get(self, group_id):
         return in_progress, 200
@@ -44,7 +47,17 @@ class CommGroup(Resource):
         return in_progress, 200
 
 
-class CommGroupByUser(Resource):
-    def get(self, user_id):
+@api.route('/<group_id>/user')
+class GroupUserList(Resource):
+    def get(self, group_id):
         return in_progress, 200
 
+    def put(self, group_id):
+        return in_progress, 200
+
+
+@api.route('/<group_id>/user/<user_id>')
+class GroupUser(Resource):
+    def delete(self, user_id):
+        group_id = reqparse.form['group_id']
+        return in_progress, 200

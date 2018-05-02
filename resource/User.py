@@ -1,6 +1,8 @@
-from flask_restplus import Resource, abort, reqparse, fields, marshal_with
+from flask_restplus import Resource, abort, reqparse, fields, marshal_with, Namespace
 from flask import request, Flask
 from common import utils
+
+api = Namespace('user', description='users operation')
 
 in_progress = "Interface is still in progress"
 APIS = {
@@ -17,11 +19,13 @@ parser = reqparse.RequestParser()
 parser.add_argument('task', type=str)
 
 
+@api.route('/')
 class UserList(Resource):
-    def get(self, group_id):
+    def get(self):
         return in_progress, 200
 
 
+@api.route('/<user_id>')
 class User(Resource):
     def get(self, user_id):
         args = parser.parse_args()
@@ -44,15 +48,7 @@ class User(Resource):
         return in_progress, 200
 
 
-class GroupUserList(Resource):
-    def get(self, group_id):
-        return in_progress, 200
-
-    def put(self, group_id):
-        return in_progress, 200
-
-
-class GroupUser(Resource):
-    def delete(self, user_id):
-        group_id = reqparse.form['group_id']
+@api.route('/<user_id>/group')
+class CommGroupByUser(Resource):
+    def get(self, user_id):
         return in_progress, 200
