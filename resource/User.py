@@ -8,15 +8,12 @@ in_progress = "Interface is still in progress"
 APIS = {
     'user': {'task': 'manage users'}
 }
+parser = reqparse.RequestParser()
 
 
 def abort_if_todo_doesnt_exist(api_id):
     if api_id not in APIS:
         abort(404, message="API {} doesn't exist".format(api_id))
-
-
-parser = reqparse.RequestParser()
-parser.add_argument('task', type=str)
 
 
 @api.route('/')
@@ -67,4 +64,21 @@ class VerifyByUser(Resource):
 
     def  delete(self, user_id, verify_id):
         return in_progress, 200
+
+
+OperationModel = api.model('OperationModel', {
+    'group_id': fields.String(description="group_id", required=True),
+    'type': fields.String(description="1 = follow, 2 = like", required=True)
+})
+
+
+@api.route('/<user_id>/operation')
+class UserOperationGroup(Resource):
+    def get(self, user_id):
+        return in_progress, 200
+
+    @api.expect(OperationModel)
+    def post(self, user_id):
+        return in_progress, 200
+
 

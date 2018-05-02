@@ -1,7 +1,8 @@
-from flask_restplus import Resource, abort, reqparse
+from flask_restplus import Resource, abort, reqparse, Namespace
 from flask import request
 from common import utils
 
+api = Namespace('Operation', description="like, follow, unlike, unfollow etc")
 in_progress = "Interface is still in progress"
 
 APIS = {
@@ -15,20 +16,16 @@ def abort_if_todo_doesnt_exist(api_id):
 
 
 parser = reqparse.RequestParser()
-parser.add_argument('task', type=str)
+parser.add_argument('action_type', type=str)
 
 
-class UserLinkList(Resource):
-    def get(self, user_id):
-        return in_progress, 200
-
-
-class GroupUserLink(Resource):
+@api.route('/like')
+class Like(Resource):
     def get(self, user_id, group_id):
         return in_progress, 200
 
     def post(self, user_id, group_id):
-        action_type = request.form['action_type']
+        args = parser.parse_args()
         return in_progress, 200
 
 

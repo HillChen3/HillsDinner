@@ -105,3 +105,27 @@ class GroupUserVerifyList(Resource):
         args = parser.parse_args()
         print(args, group_id)
         return in_progress, 200
+
+
+@api.route('/<group_id>/follow/count')
+class GroupFollowCount(Resource):
+    def get(self, group_id):
+        return 0, 200
+
+
+@api.route('/<group_id>/like/count')
+class GroupLikeCount(Resource):
+    def get(self, group_id):
+        return 0, 200
+
+
+@api.route('/<group_id>/follow')
+class UsersWhoFollowGroup(Resource):
+    def get(self, group_id):
+        return in_progress, 200
+
+
+@api.route('/<group_id>/like')
+class UsersWhoLikeGroup(Resource):
+    def get(self, group_id):
+        return in_progress, 200

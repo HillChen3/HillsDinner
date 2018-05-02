@@ -15,7 +15,7 @@ def abort_if_todo_doesnt_exist(api_id):
 
 
 parser = reqparse.RequestParser()
-parser.add_argument('task', type=str)
+parser.add_argument('content', type=str)
 
 
 @api.route('/<verify_id>')
@@ -24,7 +24,6 @@ class Group_User_Verify(Resource):
         return in_progress, 200
 
     def post(self, verify_id):
-        message = reqparse.form['message']
         return in_progress, 200
 
 

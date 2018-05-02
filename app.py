@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_restplus import Api, fields, Resource, reqparse
-from resource import Session, User, CommGroup, GroupUserLink, GroupUserVerify, GroupNews, SMS
+from resource import Session, User, CommGroup, Operation, GroupUserVerify, GroupNews, SMS
 from resource.User import api as users
 from resource.CommGroup import api as groups
 from resource.SMS import api as SMS
@@ -12,11 +12,8 @@ api = Api(app,
           title='ace-youth',
           version='0.1',
           description='restful api for ace-youth',
-          # All API metadatas
+          # # All API metadatas
           )
-
-api.add_resource(GroupUserLink.UserLinkList, '/group_user_link/<user_id>')
-api.add_resource(GroupUserLink.GroupUserLink, '/group_user_link/<user_id>,<group_id>')
 
 api.add_namespace(users)
 api.add_namespace(groups)
