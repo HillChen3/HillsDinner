@@ -52,3 +52,19 @@ class User(Resource):
 class CommGroupByUser(Resource):
     def get(self, user_id):
         return in_progress, 200
+
+
+@api.route('/<user_id>/verify')
+class VerifyByUser(Resource):
+    def get(self, user_id):
+        return in_progress, 200
+
+
+@api.route('/<user_id>/verify/<verify_id>')
+class VerifyByUser(Resource):
+    def get(self, user_id, verify_id):
+        return in_progress, 200
+
+    def  delete(self, user_id, verify_id):
+        return in_progress, 200
+

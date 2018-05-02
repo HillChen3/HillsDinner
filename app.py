@@ -3,6 +3,9 @@ from flask_restplus import Api, fields, Resource, reqparse
 from resource import Session, User, CommGroup, GroupUserLink, GroupUserVerify, GroupNews, SMS
 from resource.User import api as users
 from resource.CommGroup import api as groups
+from resource.SMS import api as SMS
+from resource.Session import api as session
+from resource.GroupUserVerify import api as verify
 
 app = Flask(__name__)
 api = Api(app,
@@ -12,18 +15,14 @@ api = Api(app,
           # All API metadatas
           )
 
-api.add_resource(SMS.SendSMS, '/SMS/<phone_num>')
-api.add_resource(SMS.VerifySMS, '/SMS/<verify_code>,<phone_num>')
-api.add_resource(Session.Session, '/session')
 api.add_resource(GroupUserLink.UserLinkList, '/group_user_link/<user_id>')
 api.add_resource(GroupUserLink.GroupUserLink, '/group_user_link/<user_id>,<group_id>')
-api.add_resource(GroupUserVerify.Group_User_Verify, '/group_user_verify/<verify_id>')
-api.add_resource(GroupUserVerify.Group_User_Verify_List, '/group_user_verify/<group_id>/list')
-api.add_resource(GroupNews.GroupNews, '/group_news/<news_id>')
-api.add_resource(GroupNews.GroupNewsList, '/group_news/<group_id>')
 
 api.add_namespace(users)
 api.add_namespace(groups)
+api.add_namespace(SMS)
+api.add_namespace(session)
+api.add_namespace(verify)
 
 
 @api.route('/Template')

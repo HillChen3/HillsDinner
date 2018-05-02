@@ -1,9 +1,8 @@
-from flask_restplus import Resource, abort, reqparse
+from flask_restplus import Resource, abort, reqparse, Namespace
 from flask import request
 from common import utils
 
-in_progress = "Interface is still in progress"
-
+api = Namespace('SMS', description="send and verify sms")
 APIS = {
     'SMS': {'task': 'get PhoneNumber and send the SMS, verify SMS'},
 }
@@ -17,8 +16,8 @@ def abort_if_todo_doesnt_exist(api_id):
 parser = reqparse.RequestParser()
 parser.add_argument('task', type=str)
 
-
-class SendSMS(Resource):
+@api.route('/<phone_num>')
+class SendSMSCode(Resource):
     def put(self, phone_num):
         # 需要检查电话号码格式
         if utils.check_phone_num(phone_num):
@@ -27,6 +26,7 @@ class SendSMS(Resource):
         return "invalid phone num", 401
 
 
+@api.route('/<phone_num>, <verify_code>')
 class VerifySMS(Resource):
     def post(self, phone_num, verify_code):
         if phone_num is not None and verify_code is not None :

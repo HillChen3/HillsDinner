@@ -1,4 +1,4 @@
-from flask_restplus import Resource, abort, reqparse, Namespace
+from flask_restplus import Resource, abort, reqparse, Namespace, fields
 from flask import request
 from common import utils
 
@@ -16,7 +16,6 @@ def abort_if_todo_doesnt_exist(api_id):
 
 
 parser = reqparse.RequestParser()
-parser.add_argument('task', type=str)
 
 
 @api.route('/')
@@ -60,4 +59,49 @@ class GroupUserList(Resource):
 class GroupUser(Resource):
     def delete(self, user_id):
         group_id = reqparse.form['group_id']
+        return in_progress, 200
+
+
+@api.route('/<group_id>/news')
+class GroupNewsList(Resource):
+    def get(self, group_id):
+        return in_progress, 200
+
+    def put(self, group_id):
+        title = reqparse.form['title']
+        context = reqparse.form['context']
+        return in_progress, 200
+
+
+@api.route('/<group_id>/news/<news_id>')
+class GroupNews(Resource):
+    def get(self, news_id):
+        return in_progress, 200
+
+    def post(self, news_id):
+        title = reqparse.form['title']
+        context = reqparse.form['context']
+        return in_progress, 200
+
+    def delete(self, news_id):
+        return in_progress, 200
+
+
+group_verify_model = api.model('VerifyModel', {
+    'username': fields.String(description="username", required=True),
+    'content': fields.String(description="Why you wanna join", required=True)
+})
+
+
+@api.route('/<group_id>/verify')
+class GroupUserVerifyList(Resource):
+    def get(self, group_id):
+        return in_progress, 200
+
+    @api.expect(group_verify_model)
+    def put(self, group_id):
+        parser.add_argument('username', type=str)
+        parser.add_argument('content', type=str)
+        args = parser.parse_args()
+        print(args, group_id)
         return in_progress, 200

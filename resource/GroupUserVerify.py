@@ -1,6 +1,7 @@
-from flask_restplus import Resource, abort, reqparse
+from flask_restplus import Resource, abort, reqparse, Namespace
 from flask import request
 
+api = Namespace('user_verify', description="verify user who wanna join group")
 in_progress = "Interface is still in progress"
 
 APIS = {
@@ -17,21 +18,14 @@ parser = reqparse.RequestParser()
 parser.add_argument('task', type=str)
 
 
+@api.route('/<verify_id>')
 class Group_User_Verify(Resource):
     def get(self, verify_id):
-        return in_progress, 200
-
-    def put(self, verify_id):
-        message = reqparse.form['message']
-        # 需要检查电话号码格式
         return in_progress, 200
 
     def post(self, verify_id):
         message = reqparse.form['message']
         return in_progress, 200
 
-class Group_User_Verify_List(Resource):
-    def get(self, group_id):
-        return in_progress, 200
 
 
