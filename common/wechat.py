@@ -3,7 +3,7 @@ from flask_restplus import Resource, abort, reqparse
 from flask import request, app
 
 
-TOKEN = 'test'
+TOKEN = '123456'
 
 in_progress = "Interface is still in progress"
 
@@ -40,8 +40,9 @@ class SetWechat(Resource):
         print(hascode)
         #如果是来自微信的请求，则回复echostr
         if hascode == signature:
+
             return echostr
-            print("return successful")
-        else:
-            return "set wechat failed"
+            print("hascode == signature")
+        #else:
+        #    return "set wechat failed"
 
