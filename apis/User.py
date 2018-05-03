@@ -16,8 +16,25 @@ def abort_if_todo_doesnt_exist(api_id):
         abort(404, message="API {} doesn't exist".format(api_id))
 
 
+user_model = api.model('UserModel', {
+    'username': fields.String(description="username", required=True),
+    'nickname': fields.String(description="nickname", required=True),
+    'avatar': fields.String(description="avatar", required=True),
+    'gender': fields.String(description="gender", required=True),
+    'job': fields.String(description="tell us what do you do"),
+    'wechat_id': fields.String(description="wechat account"),
+    'constellation': fields.String(description="constellation"),
+    'pet_plant': fields.String(description="dog cat or?"),
+    'hobbies': fields.String(description="what do you like to do?"),
+    'fav_event_type': fields.String(description="what event's type do you like?"),
+    'self_intro': fields.String(description="introduce yourself"),
+})
+
+
 @api.route('/')
 class UserList(Resource):
+    @api.marshal_list_with(user_model)
+    @api.doc(id="test user", params={'token': 'token you have'})
     def get(self):
         return in_progress, 200
 

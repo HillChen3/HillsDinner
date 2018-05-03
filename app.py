@@ -3,6 +3,7 @@ from flask_restplus import Api, fields, Resource, reqparse
 from apis import api
 
 app = Flask(__name__)
+app.config.SWAGGER_UI_JSONEDITOR = True
 api.init_app(app)
 
 
@@ -10,7 +11,7 @@ api.init_app(app)
 class Template(Resource):
     template_model = api.model('TempModel',
                                {
-                                   'user_name': fields.String,
+                                   'username': fields.String,
                                    'password': fields.String
                                })
 
@@ -18,7 +19,7 @@ class Template(Resource):
     @api.doc(params={"user_name": "username", "password": "password"})
     def get(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('user_name', type=str, required=True, help="input your username")
+        parser.add_argument('username', type=str, required=True, help="input your username")
         parser.add_argument('password', type=str, required=True, help="input your password")
         args = parser.parse_args()
         return args

@@ -19,7 +19,7 @@ parser = reqparse.RequestParser()
 
 
 @api.route('/')
-class CommGroupList(Resource):
+class GroupList(Resource):
     def get(self):
         return in_progress, 200
 
@@ -35,7 +35,7 @@ class CommGroupList(Resource):
 
 
 @api.route('/<group_id>')
-class CommGroup(Resource):
+class Group(Resource):
     def get(self, group_id):
         return in_progress, 200
 
