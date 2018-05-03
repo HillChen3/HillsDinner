@@ -1,8 +1,8 @@
 from flask_restplus import Api
 
-from apis.CommGroup import api as group
-from apis.GroupNews import api as news
-from apis.GroupUserVerify import api as user_verify
+from apis.Group import api as group
+from apis.News import api as news
+from apis.UserVerify import api as user_verify
 from apis.Operation import api as operation
 from apis.Session import api as session
 from apis.SMS import api as SMS
