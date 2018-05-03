@@ -21,6 +21,7 @@ user_model = api.model('UserModel', {
     'nickname': fields.String(description="nickname", required=True),
     'avatar': fields.String(description="avatar", required=True),
     'gender': fields.String(description="gender", required=True),
+    'phone_num': fields.String(description="phone_num", required=True),
     'job': fields.String(description="tell us what do you do"),
     'wechat_id': fields.String(description="wechat account"),
     'constellation': fields.String(description="constellation"),
@@ -34,26 +35,25 @@ user_model = api.model('UserModel', {
 @api.route('/')
 class UserList(Resource):
     @api.marshal_list_with(user_model)
-    @api.doc(id="test user", params={'token': 'token you have'})
     def get(self):
         return in_progress, 200
+
+    @api.expect(user_model)
+    def put(self, **kwargs):
+        parser.add_argument('phone_num', type=str)
+        args = parser.parse_args()
+        # 需要检查电话号码格式
+        if utils.check_phone_num(args['phone_num']):
+            return in_progress, 200
+        return "invalid phone num", 401
 
 
 @api.route('/<user_id>')
 class User(Resource):
+    @api.marshal_with(user_model)
     def get(self, user_id):
         args = parser.parse_args()
         return in_progress, 200
-
-    def put(self, **kwargs):
-        username = request.form['username']
-        email = reqparse.form['email']
-        phone_number = reqparse.form['phone']
-        password = reqparse.form['password']
-        # 需要检查电话号码格式
-        if utils.check_phone_num(phone_number):
-            return in_progress, 200
-        return "invalid phone num", 401
 
     def post(self):
         return in_progress, 200

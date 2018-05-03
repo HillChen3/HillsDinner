@@ -4,6 +4,7 @@ from apis import api
 
 app = Flask(__name__)
 app.config.SWAGGER_UI_JSONEDITOR = True
+app.config['RESTPLUS_VALIDATE'] = True
 api.init_app(app)
 
 
