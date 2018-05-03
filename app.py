@@ -5,7 +5,7 @@ from apis import api
 app = Flask(__name__)
 app.config.SWAGGER_UI_JSONEDITOR = True
 app.config['RESTPLUS_VALIDATE'] = True
-api.init_app(app)
+app.config['BUNDLE_ERRORS'] = True
 
 
 @api.route('/Template')
@@ -17,7 +17,7 @@ class Template(Resource):
                                })
 
     @api.marshal_list_with(template_model)
-    @api.doc(params={"user_name": "username", "password": "password"})
+    @api.doc(params={"username": "username", "password": "password"})
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('username', type=str, required=True, help="input your username")
@@ -26,5 +26,6 @@ class Template(Resource):
         return args
 
 
+api.init_app(app)
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port=80)
