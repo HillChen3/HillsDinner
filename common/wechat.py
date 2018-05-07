@@ -3,6 +3,8 @@ from flask_restplus import Resource, abort, reqparse
 from wechatpy.utils import check_signature
 from wechatpy.exceptions import InvalidSignatureException
 from common import wechat_util
+from wechatpy import WeChatClient
+
 
 TOKEN = '123456'
 APPID = 'wx1010fd146b9b290c'
@@ -24,9 +26,12 @@ class SetWechatServer(Resource):
             return "check signature failed"
 
 
-class GetAccessToken(Resource):
+class GetUserInfo(Resource):
     def get(self):
         appID = APPID
         appSecret = APPSECRET
+        client = WeChatClient(appID, appSecret)
+        user = client.user.get('openid')
+
 
 
