@@ -89,3 +89,17 @@ class UserOperationGroup(Resource):
         return in_progress, 200
 
 
+@api.route('/<user_id>/group/<group_id>/like')
+class UserLikeGroup(Resource):
+    @api.marshal_with(operation_model)
+    def get(self, user_id, group_id):
+        return in_progress, 200
+
+
+@api.route('/<user_id>/group/<group_id>/follow')
+class UserFollowGroup(Resource):
+    @api.marshal_with(operation_model)
+    def get(self, user_id, group_id):
+        return in_progress, 200
+
+

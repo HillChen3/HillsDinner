@@ -4,7 +4,7 @@ from flask_restplus import fields
 operation_model = {
     'user_id': fields.String(description="user_id"),
     'username': fields.String(description='username'),
-    'group_id': fields.String(description="group_id", required=True),
+    'group_id': fields.String(description="group_id"),
     'group_name': fields.String(description='group name'),
     'type': fields.String(description="1 = follow, 2 = like", required=True),
     'type_name': fields.String(description='follow or like ...')

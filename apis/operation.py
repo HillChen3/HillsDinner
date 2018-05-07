@@ -22,11 +22,11 @@ parser.add_argument('type', type=str)
 @api.route('/like')
 class Like(Resource):
     @api.marshal_list_with(operation_model)
-    def get(self, user_id, group_id):
+    def get(self):
         return in_progress, 200
 
     @api.doc(body=operation_model)
-    def post(self, user_id, group_id):
+    def post(self):
         args = parser.parse_args()
         return in_progress, 200
 
@@ -34,10 +34,10 @@ class Like(Resource):
 @api.route('/follow')
 class Like(Resource):
     @api.marshal_list_with(operation_model)
-    def get(self, user_id, group_id):
+    def get(self):
         return in_progress, 200
 
     @api.doc(body=operation_model)
-    def post(self, user_id, group_id):
+    def post(self):
         args = parser.parse_args()
         return in_progress, 200

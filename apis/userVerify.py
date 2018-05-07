@@ -25,9 +25,7 @@ class Verify(Resource):
     @api.marshal_with(group_user_verify_model)
     def get(self, verify_id):
         return in_progress, 200
-    @api.doc(body=group_user_verify_model)
-    def post(self, verify_id):
-        return in_progress, 200
+
 
 
 
