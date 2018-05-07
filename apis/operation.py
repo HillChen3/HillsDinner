@@ -1,8 +1,8 @@
 from flask_restplus import Resource, abort, reqparse, Namespace
-from flask import request
-from common import utils
+from models.models import operation_model
 
 api = Namespace('Operation', description="like, follow, unlike, unfollow etc")
+operation_model = api.model('OperationModel', operation_model)
 in_progress = "Interface is still in progress"
 
 APIS = {
@@ -16,16 +16,28 @@ def abort_if_todo_doesnt_exist(api_id):
 
 
 parser = reqparse.RequestParser()
-parser.add_argument('action_type', type=str)
+parser.add_argument('type', type=str)
 
 
 @api.route('/like')
 class Like(Resource):
+    @api.marshal_list_with(operation_model)
     def get(self, user_id, group_id):
         return in_progress, 200
 
+    @api.doc(body=operation_model)
     def post(self, user_id, group_id):
         args = parser.parse_args()
         return in_progress, 200
 
 
+@api.route('/follow')
+class Like(Resource):
+    @api.marshal_list_with(operation_model)
+    def get(self, user_id, group_id):
+        return in_progress, 200
+
+    @api.doc(body=operation_model)
+    def post(self, user_id, group_id):
+        args = parser.parse_args()
+        return in_progress, 200

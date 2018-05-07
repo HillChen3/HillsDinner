@@ -1,7 +1,9 @@
 from flask_restplus import Resource, abort, reqparse, Namespace
-from flask import request
+from models.models import group_user_verify_model
+
 
 api = Namespace('user_verify', description="verify user who wanna join group")
+group_user_verify_model = api.model('VerifyModel', group_user_verify_model)
 in_progress = "Interface is still in progress"
 
 APIS = {
@@ -19,10 +21,11 @@ parser.add_argument('content', type=str)
 
 
 @api.route('/<verify_id>')
-class Group_User_Verify(Resource):
+class Verify(Resource):
+    @api.marshal_with(group_user_verify_model)
     def get(self, verify_id):
         return in_progress, 200
-
+    @api.doc(body=group_user_verify_model)
     def post(self, verify_id):
         return in_progress, 200
 

@@ -1,5 +1,5 @@
 from flask_restplus import Resource, abort, reqparse, fields, marshal_with, Namespace
-from models.models import user_model, operation_model
+from models.models import user_model, operation_model, group_model, group_user_verify_model
 from common import utils
 
 parser = reqparse.RequestParser()
@@ -9,6 +9,10 @@ in_progress = "Interface is still in progress"
 APIS = {
     'user': {'task': 'manage users'}
 }
+user_model = api.model('UserModel', user_model)
+operation_model = api.model('OperationModel', operation_model)
+group_model = api.model('GroupModel', group_model)
+group_user_verify_model = api.model('VerifyModel', group_user_verify_model)
 
 
 def abort_if_todo_doesnt_exist(api_id):
@@ -52,23 +56,25 @@ class User(Resource):
 
 @api.route('/<user_id>/group')
 class CommGroupByUser(Resource):
-    @api.marshal_list_with(user_model)
+    @api.marshal_list_with(group_model)
     def get(self, user_id):
         return in_progress, 200
 
 
 @api.route('/<user_id>/verify')
 class VerifyByUser(Resource):
+    @api.marshal_list_with(group_user_verify_model)
     def get(self, user_id):
         return in_progress, 200
 
 
 @api.route('/<user_id>/verify/<verify_id>')
 class VerifyByUser(Resource):
+    @api.marshal_with(group_user_verify_model)
     def get(self, user_id, verify_id):
         return in_progress, 200
 
-    def  delete(self, user_id, verify_id):
+    def delete(self, user_id, verify_id):
         return in_progress, 200
 
 
