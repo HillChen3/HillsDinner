@@ -1,5 +1,5 @@
 from flask_restplus import Resource, abort, reqparse, fields, marshal_with, Namespace
-from flask import request, Flask
+from models.models import user_model, operation_model
 from common import utils
 
 parser = reqparse.RequestParser()
@@ -14,22 +14,6 @@ APIS = {
 def abort_if_todo_doesnt_exist(api_id):
     if api_id not in APIS:
         abort(404, message="API {} doesn't exist".format(api_id))
-
-
-user_model = api.model('UserModel', {
-    'username': fields.String(description="username", required=True),
-    'nickname': fields.String(description="nickname", required=True),
-    'avatar': fields.String(description="avatar", required=True),
-    'gender': fields.String(description="gender", required=True),
-    'phone_num': fields.String(description="phone_num", required=True),
-    'job': fields.String(description="tell us what do you do"),
-    'wechat_id': fields.String(description="wechat account"),
-    'constellation': fields.String(description="constellation"),
-    'pet_plant': fields.String(description="dog cat or?"),
-    'hobbies': fields.String(description="what do you like to do?"),
-    'fav_event_type': fields.String(description="what event's type do you like?"),
-    'self_intro': fields.String(description="introduce yourself"),
-})
 
 
 @api.route('/')
@@ -58,6 +42,7 @@ class User(Resource):
         args = parser.parse_args()
         return in_progress, 200
 
+    @api.doc(body=user_model)
     def post(self):
         return in_progress, 200
 
@@ -67,6 +52,7 @@ class User(Resource):
 
 @api.route('/<user_id>/group')
 class CommGroupByUser(Resource):
+    @api.marshal_list_with(user_model)
     def get(self, user_id):
         return in_progress, 200
 
@@ -86,18 +72,13 @@ class VerifyByUser(Resource):
         return in_progress, 200
 
 
-OperationModel = api.model('OperationModel', {
-    'group_id': fields.String(description="group_id", required=True),
-    'type': fields.String(description="1 = follow, 2 = like", required=True)
-})
-
-
 @api.route('/<user_id>/operation')
 class UserOperationGroup(Resource):
+    @api.marshal_list_with(operation_model)
     def get(self, user_id):
         return in_progress, 200
 
-    @api.expect(OperationModel)
+    @api.expect(operation_model)
     def post(self, user_id):
         return in_progress, 200
 

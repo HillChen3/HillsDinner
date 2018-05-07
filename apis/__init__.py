@@ -1,12 +1,12 @@
 from flask_restplus import Api
 
-from apis.Group import api as group
-from apis.News import api as news
-from apis.UserVerify import api as user_verify
-from apis.Operation import api as operation
-from apis.Session import api as session
+from apis.group import api as group
+from apis.news import api as news
+from apis.userVerify import api as user_verify
+from apis.operation import api as operation
+from apis.session import api as session
 from apis.SMS import api as SMS
-from apis.User import api as user
+from apis.user import api as user
 
 api = Api(
     title='ace-youth',
