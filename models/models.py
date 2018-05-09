@@ -32,7 +32,7 @@ group_model = {
     'group_id': fields.String(description='group_id', required=True),
     'group_name': fields.String(description="group's name", required=True),
     'group_topic': fields.String(description='topic in group', required=True),
-    'build_time': fields.DateTime(description='When did group build'),
+    'build_time': fields.String(description='When did group build'),
     'event_location': fields.String(description='online, offline or both'),
     'group_QRCode': fields.String(description='the url for group QRCode'),
     'is_verify_need': fields.Boolean(description='Is user need verify to join this group'),

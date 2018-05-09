@@ -9,10 +9,10 @@ in_progress = "Interface is still in progress"
 APIS = {
     'user': {'task': 'manage users'}
 }
-user_model = api.model('UserModel', user_model)
-operation_model = api.model('OperationModel', operation_model)
-group_model = api.model('GroupModel', group_model)
-group_user_verify_model = api.model('VerifyModel', group_user_verify_model)
+user_model_reg = api.model('UserModel', user_model)
+operation_model_reg = api.model('OperationModel', operation_model)
+group_model_reg = api.model('GroupModel', group_model)
+group_user_verify_model_reg = api.model('VerifyModel', group_user_verify_model)
 
 
 def abort_if_todo_doesnt_exist(api_id):
@@ -20,16 +20,24 @@ def abort_if_todo_doesnt_exist(api_id):
         abort(404, message="API {} doesn't exist".format(api_id))
 
 
+def set_in_progress_model(args):
+    for key, value in args.items():
+        args[key] = in_progress
+    return args
+
+
 @api.route('/')
 class UserList(Resource):
-    @api.marshal_list_with(user_model)
+    @api.marshal_list_with(user_model_reg)
     def get(self):
-        return in_progress, 200
+        args = user_model
+        args = set_in_progress_model(args)
+        return args, 200
 
-    @api.doc(body=user_model)
+    @api.doc(body=user_model_reg)
     def put(self):
-        parser.add_argument('phone_num', type=str, required=True)
-        parser.add_argument('username', type=str, required=True, help='username test')
+        for key, value in user_model.items():
+            parser.add_argument(key, type=str, required=True)
         args = parser.parse_args()
         print(args)
         # 需要检查电话号码格式
@@ -40,47 +48,45 @@ class UserList(Resource):
 
 @api.route('/<user_id>')
 class User(Resource):
-    @api.marshal_with(user_model)
+    @api.marshal_with(user_model_reg)
     def get(self, user_id):
-        parser = reqparse.RequestParser()
+        args = user_model
+        args = set_in_progress_model(args)
+        args['user_id'] = user_id
+        return args, 200
+
+    @api.doc(body=user_model_reg)
+    def post(self, user_id):
+        for key, value in user_model.items():
+            parser.add_argument(key, type=str)
         args = parser.parse_args()
+        args['user_id'] = user_id
+        print(args)
         return in_progress, 200
 
-    @api.doc(body=user_model)
-    def post(self):
-        return in_progress, 200
-
-    def delete(self):
+    def delete(self, user_id):
         return in_progress, 200
 
 
 @api.route('/<user_id>/group')
 class CommGroupByUser(Resource):
-    @api.marshal_list_with(group_model)
+    @api.marshal_list_with(group_model_reg)
     def get(self, user_id):
-        return in_progress, 200
+        result = [group_model, group_model]
+        return result, 200
 
 
 @api.route('/<user_id>/verify')
 class VerifyByUser(Resource):
-    @api.marshal_list_with(group_user_verify_model)
+    @api.marshal_list_with(group_user_verify_model_reg)
     def get(self, user_id):
-        return in_progress, 200
-
-
-@api.route('/<user_id>/verify/<verify_id>')
-class VerifyByUser(Resource):
-    @api.marshal_with(group_user_verify_model)
-    def get(self, user_id, verify_id):
-        return in_progress, 200
-
-    def delete(self, user_id, verify_id):
-        return in_progress, 200
+        result = [group_user_verify_model, group_user_verify_model]
+        return result, 200
 
 
 @api.route('/<user_id>/operation')
 class UserOperationGroup(Resource):
-    @api.marshal_list_with(operation_model)
+    @api.marshal_list_with(operation_model_reg)
     def get(self, user_id):
         return in_progress, 200
 
@@ -91,14 +97,14 @@ class UserOperationGroup(Resource):
 
 @api.route('/<user_id>/group/<group_id>/like')
 class UserLikeGroup(Resource):
-    @api.marshal_with(operation_model)
+    @api.marshal_with(operation_model_reg)
     def get(self, user_id, group_id):
         return in_progress, 200
 
 
 @api.route('/<user_id>/group/<group_id>/follow')
 class UserFollowGroup(Resource):
-    @api.marshal_with(operation_model)
+    @api.marshal_with(operation_model_reg)
     def get(self, user_id, group_id):
         return in_progress, 200
 
