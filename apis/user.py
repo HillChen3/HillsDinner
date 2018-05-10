@@ -35,7 +35,7 @@ class UserList(Resource):
         return args, 200
 
     @api.doc(body=user_model_reg)
-    def put(self):
+    def post(self):
         for key, value in user_model.items():
             parser.add_argument(key, type=str, required=True)
         args = parser.parse_args()
@@ -56,7 +56,7 @@ class User(Resource):
         return args, 200
 
     @api.doc(body=user_model_reg)
-    def post(self, user_id):
+    def put(self, user_id):
         for key, value in user_model.items():
             parser.add_argument(key, type=str)
         args = parser.parse_args()
@@ -85,13 +85,28 @@ class VerifyByUser(Resource):
 
 
 @api.route('/<user_id>/operation')
-class UserOperationGroup(Resource):
+class UserOperationList(Resource):
     @api.marshal_list_with(operation_model_reg)
     def get(self, user_id):
         return in_progress, 200
 
     @api.expect(operation_model)
-    def post(self, user_id):
+    def delete(self, user_id):
+        return in_progress, 200
+
+
+@api.route('/<user_id>/operation/<operation_id>')
+class UserOperation(Resource):
+    @api.marshal_list_with(operation_model_reg)
+    def get(self, user_id):
+        return in_progress, 200
+
+    @api.expect(operation_model)
+    def put(self, user_id):
+        return in_progress, 200
+
+    @api.expect(operation_model)
+    def delete(self, user_id):
         return in_progress, 200
 
 

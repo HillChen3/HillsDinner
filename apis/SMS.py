@@ -18,7 +18,7 @@ parser.add_argument('task', type=str)
 
 @api.route('/<phone_num>')
 class SendSMSCode(Resource):
-    def put(self, phone_num):
+    def post(self, phone_num):
         # 需要检查电话号码格式
         if utils.check_phone_num(phone_num):
             flag, message = utils.send_message(phone_num)

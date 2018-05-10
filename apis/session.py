@@ -20,15 +20,11 @@ def abort_if_todo_doesnt_exist(api_id):
 
 @api.route('/<username>, <password>')
 class Session(Resource):
-    def put(self):
-        return in_progress, 200
-
-    def get(self):
+    def get(self, username, password):
         return in_progress + " get", 200
 
 
-@api.route('/')
+@api.route('/<username>')
 class Logout(Resource):
-    @api.doc(params={"username": 'username'})
-    def delete(self):
+    def delete(self, username):
         return in_progress, 200
