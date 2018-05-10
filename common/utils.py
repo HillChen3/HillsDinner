@@ -84,7 +84,7 @@ cn_tel = [133, 153, 180, 181, 189, 177, 1700]
 
 
 def verify_num(phone_num):
-    v_number = int(phone_num)
+    v_number = int(phone_num[:3])
 
     cnm = v_number in cn_mobile  # 验证为移动
     cnu = v_number in cn_union  # 验证为联通

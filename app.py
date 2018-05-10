@@ -1,38 +1,58 @@
-import hashlib
+from flask import Flask, Response
+from flask_restplus import fields, Resource, reqparse
+from wechatpy import WeChatClient
 
-from flask import Flask, request
-from flask_restplus import Api
-from common import wechat, wechat_util
-from resource import Session, User, CommGroup, GroupUserLink, GroupUserVerify, GroupNews, SMS
-
-
+from apis import api
+from wechatpy.utils import check_signature
+from flask import request
+from resource import settings
 app = Flask(__name__)
-api = Api(app)
-api.add_resource(wechat.SetWechatServer, "/wechat/setwechat")
-api.add_resource(wechat.GetUserInfo, "/wechat/getuserinfo")
-api.add_resource(SMS.SendSMS, '/SMS/<phone_num>')
-api.add_resource(SMS.VerifySMS, '/SMS/<verify_code>,<phone_num>')
-api.add_resource(Session.Session, '/session')
-api.add_resource(User.User, '/user/<user_id>')
-api.add_resource(User.UserList, '/user/<group_id>')
-api.add_resource(CommGroup.CommGroup, '/group/<group_id>')
-api.add_resource(CommGroup.CommGroupList, '/group')
-api.add_resource(CommGroup.CommGroupByUser, '/user/<user_id>/group')
-api.add_resource(User.GroupUser, '/group/<group_id>/user/<user_id>')
-api.add_resource(User.GroupUserList, '/group/<group_id>/user')
-api.add_resource(GroupUserLink.UserLinkList, '/group_user_link/<user_id>')
-api.add_resource(GroupUserLink.GroupUserLink, '/group_user_link/<user_id>,<group_id>')
-api.add_resource(GroupUserVerify.Group_User_Verify, '/group_user_verify/<verify_id>')
-api.add_resource(GroupUserVerify.Group_User_Verify_List, '/group_user_verify/<group_id>/list')
-api.add_resource(GroupNews.GroupNews, '/group_news/<news_id>')
-api.add_resource(GroupNews.GroupNewsList, '/group_news/<group_id>')
+app.config.SWAGGER_UI_JSONEDITOR = True
+app.config['RESTPLUS_VALIDATE'] = True
+app.config['BUNDLE_ERRORS'] = True
 
-@app.route('/menu')
-def setMenu():
-    if wechat_util.Menu.creatMenu == 200:
-        return 200
-    else:
-        return "set menu error"
 
+@api.route('/Template')
+class Template(Resource):
+    template_model = api.model('TempModel',
+                               {
+                                   'username': fields.String,
+                                   'password': fields.String
+                               })
+
+    @api.marshal_list_with(template_model)
+    @api.doc(params={"username": "username", "password": "password"})
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('username', type=str, required=True, help="input your username")
+        parser.add_argument('password', type=str, required=True, help="input your password")
+        args = parser.parse_args()
+        return args
+
+
+@api.route('/wechat/settings')
+class SetWechatServer(Resource):
+    app.config.from_object(settings.wechatConstant)
+    def get(self):
+        token = app.config.get("TOKEN")
+        data = request.args
+        signature = data.get('signature', '')
+        timestamp = data.get('timestamp', '')
+        nonce = data.get('nonce', '')
+        echostr = data.get('echostr', '')
+        try:
+            check_signature(token, signature, timestamp, nonce)
+            return Response(response=echostr, content_type='text/html')
+            print("set wechat server successfully")
+        except InvalidSignatureException:
+            return "check signature failed"
+    def post(self):
+        appid = app.config.get('APPID')
+        appsecret = app.config.get('APPSECRET')
+        menu_data = app.config.get('MENU_DATA')
+        client = WeChatClient(appid, appsecret)
+        client.menu.create(menu_data)
+
+api.init_app(app)
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port=80)
