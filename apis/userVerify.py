@@ -26,6 +26,9 @@ class Verify(Resource):
     def get(self, verify_id):
         return in_progress, 200
 
+    def delete(self, verify_id):
+        return in_progress, 200
+
 
 
 

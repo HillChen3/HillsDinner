@@ -25,19 +25,10 @@ class Like(Resource):
     def get(self):
         return in_progress, 200
 
-    @api.doc(body=operation_model)
-    def post(self):
-        args = parser.parse_args()
-        return in_progress, 200
-
 
 @api.route('/follow')
-class Like(Resource):
+class Follow(Resource):
     @api.marshal_list_with(operation_model)
     def get(self):
         return in_progress, 200
 
-    @api.doc(body=operation_model)
-    def post(self):
-        args = parser.parse_args()
-        return in_progress, 200

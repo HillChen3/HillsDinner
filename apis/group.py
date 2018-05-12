@@ -29,7 +29,7 @@ class GroupList(Resource):
         return in_progress, 200
 
     @api.doc(body=group_model)
-    def put(self):
+    def post(self):
         phone_number = 18688888888
         # 需要检查电话号码格式
         if utils.check_phone_num(phone_number):
@@ -44,7 +44,7 @@ class Group(Resource):
         return in_progress, 200
 
     @api.doc(body=group_model)
-    def post(self, group_id):
+    def put(self, group_id):
         return in_progress, 200
 
     def delete(self, group_id):
@@ -58,7 +58,7 @@ class GroupUserList(Resource):
         return in_progress, 200
 
     @api.doc(body=user_model)
-    def put(self, group_id):
+    def post(self, group_id):
         return in_progress, 200
 
 
@@ -74,7 +74,7 @@ class GroupNewsList(Resource):
     def get(self, group_id):
         return in_progress, 200
 
-    def put(self, group_id):
+    def post(self, group_id):
         title = reqparse.form['title']
         context = reqparse.form['context']
         return in_progress, 200
@@ -85,7 +85,7 @@ class GroupNews(Resource):
     def get(self, news_id):
         return in_progress, 200
 
-    def post(self, news_id):
+    def put(self, news_id):
         title = reqparse.form['title']
         context = reqparse.form['context']
         return in_progress, 200
@@ -101,7 +101,7 @@ class GroupUserVerifyList(Resource):
         return in_progress, 200
 
     @api.expect(group_user_verify_model)
-    def put(self, group_id):
+    def post(self, group_id):
         parser.add_argument('username', type=str)
         parser.add_argument('group_name', type=str)
         parser.add_argument('content', type=str)
