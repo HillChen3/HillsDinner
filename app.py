@@ -5,12 +5,17 @@ from wechatpy import WeChatClient
 from apis import api
 from wechatpy.utils import check_signature
 from flask import request
+
+from common import wechat
 from resource import settings
+
 app = Flask(__name__)
 app.config.SWAGGER_UI_JSONEDITOR = True
 app.config['RESTPLUS_VALIDATE'] = True
 app.config['BUNDLE_ERRORS'] = True
-
+appid = app.config.get('APPID')
+appsecret = app.config.get('APPSECRET')
+menu_data = app.config.get('MENU_DATA')
 
 @api.route('/Template')
 class Template(Resource):
@@ -33,6 +38,7 @@ class Template(Resource):
 @api.route('/wechat/settings')
 class SetWechatServer(Resource):
     app.config.from_object(settings.wechatConstant)
+
     def get(self):
         token = app.config.get("TOKEN")
         data = request.args
@@ -46,12 +52,17 @@ class SetWechatServer(Resource):
             print("set wechat server successfully")
         except InvalidSignatureException:
             return "check signature failed"
+
     def post(self):
-        appid = app.config.get('APPID')
-        appsecret = app.config.get('APPSECRET')
-        menu_data = app.config.get('MENU_DATA')
         client = WeChatClient(appid, appsecret)
+#设置公众号菜单
         client.menu.create(menu_data)
+#获取用户信息
+        wechat.GetWechatInfo.get(self,appid,appsecret)
+
+
+
+
 
 api.init_app(app)
 if __name__ == '__main__':

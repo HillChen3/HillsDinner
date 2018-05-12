@@ -13,7 +13,7 @@ class wechatConstant(object):
                     {
                         "type": "view",
                         "name": "我的社群",
-                        "url": "http://www.aceyouth.org"
+                        "url": "http://www.aceyouth.orgß"
                     },
                     {
                         "type": "view",
