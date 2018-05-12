@@ -5,7 +5,7 @@ def get_connection():
     return mysql.connector.connect(host='localhost', port=3306, user='root', passwd='ace123', db='aceyouth')
 
 
-def noquery(input_sql):
+def no_query(input_sql):
     conn = get_connection()
     cursor = conn.cursor()
     try:
@@ -27,6 +27,7 @@ def query(input_sql):
         print(input_sql)
         cursor.execute(input_sql)
         result = cursor.fetchall()
+        print('result is : ', result)
         return result
     except RuntimeError:
         print(RuntimeError)
@@ -46,7 +47,7 @@ def set_response_data(model, values):
 
 
 def make_dict_by_model(model, value):
-    if value and type(value) == list:
-        return dict(zip(model.keys(), value[0]))
+    if value:
+        return dict(zip(model.keys(), value))
     else:
         return None

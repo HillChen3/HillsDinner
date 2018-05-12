@@ -1,7 +1,6 @@
 from flask_restplus import Resource, abort, reqparse, Namespace
 from models.models import user_model, operation_model, group_model, group_user_verify_model
 from common import utils, db_utils
-from flask import jsonify
 
 parser = reqparse.RequestParser()
 api = Namespace('user', description='users operation')
@@ -49,7 +48,7 @@ class UserList(Resource):
         add_user = add_user.format(args['username'], args['nickname'], args['avatar'], args['gender'])
         # 需要检查电话号码格式
         if utils.check_phone_num(args['phone_num']):
-            db_utils.noquery(add_user)
+            db_utils.no_query(add_user)
             return 'success', 200
 
         return "invalid phone num", 400
@@ -60,25 +59,38 @@ class User(Resource):
     @api.marshal_with(user_model_reg)
     def get(self, user_id):
         query_user = "SELECT id, username, nickname, avatar, gender FROM users WHERE id = {}".format(user_id)
-        response = "no data found"
         result = db_utils.query(query_user)
         if result:
-            response = db_utils.make_dict_by_model(value=result, model=user_model)
+            response = db_utils.make_dict_by_model(value=result[0], model=user_model)
             print(response)
             return response, 200
-        return response, 204
+        return "no content", 204
 
     @api.doc(body=user_model_reg)
     def put(self, user_id):
+        print('get ', User.get(self, user_id))
+        if User.get(self, user_id)[1] == 204:
+            return "can not found this user_id", 400
+        update_user = ('UPDATE users '
+                       'SET username = "{}", nickname = "{}", avatar = "{}", gender = {} '
+                       'WHERE id = {}')
+
         for key, value in user_model.items():
-            parser.add_argument(key, type=str)
+            parser.add_argument(key, type=str, required=True)
         args = parser.parse_args()
-        args['user_id'] = user_id
         print(args)
-        return in_progress, 200
+        update_user = update_user.format(args['username'], args['nickname'], args['avatar'], args['gender'], user_id)
+        # 需要检查电话号码格式
+        if utils.check_phone_num(args['phone_num']):
+            db_utils.no_query(update_user)
+            return 'success', 200
+
+        return "invalid phone num", 400
 
     def delete(self, user_id):
-        return in_progress, 200
+        delete_user = ('DELETE FROM users where id = {}').format(user_id)
+        db_utils.no_query(delete_user)
+        return 'success', 200
 
 
 @api.route('/<user_id>/group')
