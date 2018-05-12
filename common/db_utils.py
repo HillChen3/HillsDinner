@@ -5,7 +5,7 @@ def get_connection():
     return mysql.connector.connect(host='localhost', port=3306, user='root', passwd='ace123', db='aceyouth')
 
 
-def exec(input_sql):
+def exec_noquery(input_sql):
     conn = get_connection()
     cursor = conn.cursor()
     try:
