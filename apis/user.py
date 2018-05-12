@@ -49,7 +49,7 @@ class UserList(Resource):
         add_user = add_user.format(args['username'], args['nickname'], args['avatar'], args['gender'])
         # 需要检查电话号码格式
         if utils.check_phone_num(args['phone_num']):
-            db_utils.exec_noquery(add_user)
+            db_utils.noquery(add_user)
             return 'success', 200
 
         return "invalid phone num", 400
