@@ -1,6 +1,6 @@
 from flask_restplus import Resource, abort, reqparse, Namespace
 from models.models import user_model, operation_model, group_model, group_user_verify_model
-from common import utils, db
+from common import utils, db_utils
 from flask import jsonify
 
 parser = reqparse.RequestParser()
@@ -27,31 +27,38 @@ def set_in_progress_model(args):
     return args
 
 
+def set_response_data(values):
+    result = []
+    for value in values:
+        tmp = dict(zip(user_model.keys(), value))
+        print('tmp is : ', tmp)
+        result.append(tmp)
+    return result
+
+
 @api.route('/')
 class UserList(Resource):
     @api.marshal_list_with(user_model_reg)
     def get(self):
-        query_user = ('SELECT username, nickname, gender FROM USERS')
-        result = db.query(query_user)
-        response = []
-        for username, nickname, gender in result:
-            response.append({'username': username, 'nickname': nickname, 'gender': gender})
+        query_user = ('SELECT id, username, nickname, avatar, gender FROM users')
+        result = db_utils.query(query_user)
+        response = set_response_data(values=result)
         print(response)
         return response, 200
 
     @api.doc(body=user_model_reg)
     def post(self):
-        add_user = ('INSERT INTO USERS '
-                    '(username, nickname, gender) values ("{}", "{}", "{}")')
+        add_user = ('INSERT INTO users '
+                    '(username, nickname, avatar, gender) values ("{}", "{}", "{}", "{}")')
 
         for key, value in user_model.items():
             parser.add_argument(key, type=str, required=True)
         args = parser.parse_args()
         print(args)
-        add_user = add_user.format(args['username'], args['nickname'], args['gender'])
+        add_user = add_user.format(args['username'], args['nickname'], args['avatar'], args['gender'])
         # 需要检查电话号码格式
         if utils.check_phone_num(args['phone_num']):
-            db.insert(add_user)
+            db_utils.insert(add_user)
             return 'success', 200
 
         return "invalid phone num", 401
@@ -133,5 +140,3 @@ class UserFollowGroup(Resource):
     @api.marshal_with(operation_model_reg)
     def get(self, user_id, group_id):
         return in_progress, 200
-
-

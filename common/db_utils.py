@@ -27,6 +27,7 @@ def query(input_sql):
         print(input_sql)
         cursor.execute(input_sql)
         result = cursor.fetchall()
+        print('query result is :', result)
         return result
     except RuntimeError:
         print(RuntimeError)
