@@ -18,3 +18,19 @@ def insert(input_sql):
     finally:
         cursor.close()
         conn.close()
+
+
+def query(input_sql):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        print(input_sql)
+        cursor.execute(input_sql)
+        result = cursor.fetchall()
+        return result
+    except RuntimeError:
+        print(RuntimeError)
+        raise RuntimeError
+    finally:
+        cursor.close()
+        conn.close()
