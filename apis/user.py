@@ -1,4 +1,4 @@
-from flask_restplus import Resource, abort, reqparse, fields, marshal_with, Namespace
+from flask_restplus import Resource, abort, reqparse, Namespace
 from models.models import user_model, operation_model, group_model, group_user_verify_model
 from common import utils
 
