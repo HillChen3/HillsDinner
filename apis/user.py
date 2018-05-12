@@ -31,7 +31,7 @@ def set_in_progress_model(args):
 class UserList(Resource):
     @api.marshal_list_with(user_model_reg)
     def get(self):
-        query_user = ('SELECT id, username, nickname, avatar, gender FROM users')
+        query_user = 'SELECT id, username, nickname, avatar, gender FROM users'
         result = db_utils.query(query_user)
         response = db_utils.set_response_data(values=result, model=user_model)
         print(response)
@@ -59,10 +59,14 @@ class UserList(Resource):
 class User(Resource):
     @api.marshal_with(user_model_reg)
     def get(self, user_id):
-        args = user_model
-        args = set_in_progress_model(args)
-        args['user_id'] = user_id
-        return args, 200
+        query_user = "SELECT id, username, nickname, avatar, gender FROM users WHERE id = {}".format(user_id)
+        response = "no data found"
+        result = db_utils.query(query_user)
+        if result:
+            response = db_utils.make_dict_by_model(value=result, model=user_model)
+            print(response)
+            return response, 200
+        return response, 204
 
     @api.doc(body=user_model_reg)
     def put(self, user_id):

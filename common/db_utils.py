@@ -47,4 +47,7 @@ def set_response_data(model, values):
 
 
 def make_dict_by_model(model, value):
-    return dict(zip(model.keys, value))
+    if value and type(value) == list:
+        return dict(zip(model.keys(), value[0]))
+    else:
+        return None
