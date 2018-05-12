@@ -32,6 +32,8 @@ class UserList(Resource):
     def get(self):
         query_user = 'SELECT id, username, nickname, avatar, gender FROM users'
         result = db_utils.query(query_user)
+        if not result:
+            return 'no content', 204
         response = db_utils.set_response_data(values=result, model=user_model)
         print(response)
         return response, 200
@@ -70,7 +72,7 @@ class User(Resource):
     def put(self, user_id):
         print('get ', User.get(self, user_id))
         if User.get(self, user_id)[1] == 204:
-            return "can not found this user_id", 400
+            return "can not found this user_id", 204
         update_user = ('UPDATE users '
                        'SET username = "{}", nickname = "{}", avatar = "{}", gender = {} '
                        'WHERE id = {}')
@@ -88,7 +90,7 @@ class User(Resource):
         return "invalid phone num", 400
 
     def delete(self, user_id):
-        delete_user = ('DELETE FROM users where id = {}').format(user_id)
+        delete_user = 'DELETE FROM users where id = {}'.format(user_id)
         db_utils.no_query(delete_user)
         return 'success', 200
 

@@ -2,8 +2,8 @@ import mysql.connector
 
 
 def get_connection():
-    return mysql.connector.connect(host='localhost', user='root', passwd='ace123', db='aceyouth')
-
+    # return mysql.connector.connect(host='172.31.27.37', port=3306, user='root', passwd='ace123', db='aceyouth')
+    return mysql.connector.connect(host='172.17.0.5', port=3306, user='root', passwd='ace123', db='aceyouth')
 
 def no_query(input_sql):
     conn = get_connection()
