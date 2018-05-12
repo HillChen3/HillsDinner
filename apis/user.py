@@ -27,22 +27,13 @@ def set_in_progress_model(args):
     return args
 
 
-def set_response_data(values):
-    result = []
-    for value in values:
-        tmp = dict(zip(user_model.keys(), value))
-        print('tmp is : ', tmp)
-        result.append(tmp)
-    return result
-
-
 @api.route('/')
 class UserList(Resource):
     @api.marshal_list_with(user_model_reg)
     def get(self):
         query_user = ('SELECT id, username, nickname, avatar, gender FROM users')
         result = db_utils.query(query_user)
-        response = set_response_data(values=result)
+        response = db_utils.set_response_data(values=result, model=user_model)
         print(response)
         return response, 200
 
