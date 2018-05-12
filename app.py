@@ -6,16 +6,13 @@ from apis import api
 from wechatpy.utils import check_signature
 from flask import request
 
-from common import wechat
+from common import wechat, db_utils
 from resource import settings
 
 app = Flask(__name__)
 app.config.SWAGGER_UI_JSONEDITOR = True
 app.config['RESTPLUS_VALIDATE'] = True
 app.config['BUNDLE_ERRORS'] = True
-appid = app.config.get('APPID')
-appsecret = app.config.get('APPSECRET')
-menu_data = app.config.get('MENU_DATA')
 
 @api.route('/Template')
 class Template(Resource):
@@ -54,11 +51,26 @@ class SetWechatServer(Resource):
             return "check signature failed"
 
     def post(self):
+        appid = app.config.get('APPID')
+        appsecret = app.config.get('APPSECRET')
+        menu_data = app.config.get('MENU_DATA')
         client = WeChatClient(appid, appsecret)
-#设置公众号菜单
         client.menu.create(menu_data)
-#获取用户信息
-        wechat.GetWechatInfo.get(self,appid,appsecret)
+        openid = request.args.get('openid')
+        user = client.user.get(openid)
+        nickname = user.get('nickname')
+        sex = user.get('sex')
+        language = user.get('language')
+        city = user.get('city')
+        province = user.get('province')
+        country = user.get('country')
+        headimgurl = user.get('headimgurl')
+        add_user = ('INSERT INTO users '
+                    '(wechat_id, nickname, gender,city,province, country, headimgurl) values ("{}", "{}", "{}", "{}", "{}", "{}", "{}")')
+        add_user = add_user.format(openid, nickname, sex, city, province, country, headimgurl)
+        if user is not None:
+            db_utils.no_query(add_user)
+            return "add wechat information for user successfully"
 
 
 
