@@ -40,7 +40,11 @@ def query(input_sql):
 def set_response_data(model, values):
     result = []
     for value in values:
-        tmp = dict(zip(model.keys(), value))
+        tmp = make_dict_by_model(model=model, value=value)
         print('tmp is : ', tmp)
         result.append(tmp)
     return result
+
+
+def make_dict_by_model(model, value):
+    return dict(zip(model.keys, value))
