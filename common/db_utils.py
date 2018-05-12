@@ -35,3 +35,12 @@ def query(input_sql):
     finally:
         cursor.close()
         conn.close()
+
+
+def set_response_data(model, values):
+    result = []
+    for value in values:
+        tmp = dict(zip(model.keys(), value))
+        print('tmp is : ', tmp)
+        result.append(tmp)
+    return result
