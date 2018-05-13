@@ -13,8 +13,9 @@ APIS = {
     'comm-group': {'task': 'manage comm-groups'}
 }
 query_group = ('SELECT id, group_name, group_topic, build_time, event_location, '
-                       'group_QRCode, is_verify_need, join_question, group_desc '
-                       'FROM comm_groups')
+               'group_QRCode, is_verify_need, join_question, group_desc '
+               'FROM comm_groups')
+
 
 def abort_if_todo_doesnt_exist(api_id):
     if api_id not in APIS:
@@ -74,9 +75,9 @@ class Group(Resource):
         if Group.get(self, group_id)[1] == 204:
             return "can not found this group_id", 204
         update_group = ('UPDATE comm_groups '
-                       'SET group_name = "{}", group_topic = "{}", build_time = "{}", event_location = "{}", '
-                       'group_QRCode = "{}", is_verify_need = {}, join_question = "{}", group_desc = "{}" '
-                       'WHERE id = {}')
+                        'SET group_name = "{}", group_topic = "{}", build_time = "{}", event_location = "{}", '
+                        'group_QRCode = "{}", is_verify_need = {}, join_question = "{}", group_desc = "{}" '
+                        'WHERE id = {}')
 
         for key, value in group_model.items():
             parser.add_argument(key, type=str, required=True)
@@ -89,9 +90,10 @@ class Group(Resource):
         db_utils.no_query(update_group)
         return 'success', 200
 
-
     def delete(self, group_id):
-        return in_progress, 200
+        delete_group = 'DELETE FROM comm_groups where id = {}'.format(group_id)
+        db_utils.no_query(delete_group)
+        return 'success', 200
 
 
 @api.route('/<group_id>/user')
