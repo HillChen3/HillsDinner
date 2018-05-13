@@ -6,29 +6,25 @@ def get_connection():
 
 
 def no_query(input_sql):
-    conn = get_connection()
-    cursor = conn.cursor()
-    try:
-        print(input_sql)
-        cursor.execute(input_sql)
-        conn.commit()
-    except RuntimeError:
-        print(RuntimeError)
-        raise RuntimeError
-    finally:
-        cursor.close()
-        conn.close()
+    exec_sql(input_sql=input_sql, operation_type='no_query')
 
 
 def query(input_sql):
+    return exec_sql(input_sql=input_sql, operation_type='query')
+
+
+def exec_sql(input_sql, operation_type):
     conn = get_connection()
     cursor = conn.cursor()
     try:
         print(input_sql)
         cursor.execute(input_sql)
-        result = cursor.fetchall()
-        print('result is : ', result)
-        return result
+        if operation_type == 'query':
+            result = cursor.fetchall()
+            print('result is : ', result)
+            return result
+        elif operation_type == 'no_query':
+            conn.commit()
     except RuntimeError:
         print(RuntimeError)
         raise RuntimeError
