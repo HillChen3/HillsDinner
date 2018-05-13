@@ -1,6 +1,6 @@
 from flask_restplus import Resource, abort, reqparse, Namespace, fields
 from models.models import group_model, user_model, operation_model, group_user_verify_model
-from common import utils
+from common import db_utils
 
 in_progress = "Interface is still in progress"
 api = Namespace('group', description="group operation")
@@ -26,15 +26,35 @@ parser = reqparse.RequestParser()
 class GroupList(Resource):
     @api.marshal_list_with(group_model)
     def get(self):
-        return in_progress, 200
+        query_group = ('SELECT id, group_name, group_topic, build_time, event_location, '
+                       'group_QRCode, is_verify_need, join_question, group_desc '
+                       'FROM comm_groups')
+        result = db_utils.query(query_group)
+        if not result:
+            return 'no content', 204
+        response = db_utils.set_response_data(values=result, model=group_model)
+        print(response)
+        return response, 200
 
     @api.doc(body=group_model)
     def post(self):
-        phone_number = 18688888888
-        # 需要检查电话号码格式
-        if utils.check_phone_num(phone_number):
-            return in_progress, 200
-        return "invalid phone num", 401
+        add_group = ('INSERT INTO comm_groups '
+                     '(group_name, group_topic, build_time, event_location, '
+                     'group_QRCode, is_verify_need, join_question, group_desc)'
+                     ' values ('
+                     '"{}", "{}", "{}", "{}", "{}", {}, "{}", "{}")')
+
+        for key, value in group_model.items():
+            parser.add_argument(key, type=str, required=True)
+        args = parser.parse_args()
+        print(args)
+        # for item in args:
+        #     add_user += '"' + item + '", '
+        add_group = add_group.format(
+            args['group_name'], args['group_topic'], args['build_time'], args['event_location'],
+            args['group_QRCode'], args['is_verify_need'], args['join_question'], args['group_desc'])
+        db_utils.no_query(add_group)
+        return 'success', 200
 
 
 @api.route('/<group_id>')
