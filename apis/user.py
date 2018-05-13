@@ -53,7 +53,7 @@ class UserList(Resource):
             db_utils.no_query(add_user)
             return 'success', 200
 
-        return "invalid phone num", 400
+        return "invalid phone num", 422
 
 
 @api.route('/<user_id>')
@@ -87,7 +87,7 @@ class User(Resource):
             db_utils.no_query(update_user)
             return 'success', 200
 
-        return "invalid phone num", 400
+        return "invalid phone num", 422
 
     def delete(self, user_id):
         delete_user = 'DELETE FROM users where id = {}'.format(user_id)
