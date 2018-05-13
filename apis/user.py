@@ -70,7 +70,7 @@ class UserList(Resource):
 class User(Resource):
     @api.marshal_with(user_model_reg)
     def get(self, user_id):
-        query_single_user = query_user + "WHERE id = {}".format(user_id)
+        query_single_user = query_user + " WHERE id = {}".format(user_id)
         result = db_utils.query(query_single_user)
         if result:
             response = db_utils.make_dict_by_model(value=result[0], model=user_model)
@@ -84,7 +84,9 @@ class User(Resource):
         if User.get(self, user_id)[1] == 204:
             return "can not found this user_id", 204
         update_user = ('UPDATE users '
-                       'SET username = "{}", nickname = "{}", avatar = "{}", gender = {} '
+                       'SET username = "{}", nickname = "{}", avatar = "{}", gender = {}, '
+                       'phone_num = "{}", job = "{}", wechat_id = "{}", constellation = "{}", pet_plant = "{}", '
+                       'hobbies = "{}", fav_event_type = "{}", self_intro = "{}" '
                        'WHERE id = {}')
 
         for key, value in user_model.items():
