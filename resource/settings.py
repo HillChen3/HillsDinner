@@ -1,7 +1,7 @@
 # save all constant
 
 # constant of wechat
-class wechatConstant(object):
+class wechatConstants:
     TOKEN = '123456'
     APPID = 'wx1010fd146b9b290c'
     APPSECRET = '28d394c4e3b83b4145642eec67a5c5d4'
@@ -13,7 +13,7 @@ class wechatConstant(object):
                     {
                         "type": "view",
                         "name": "我的社群",
-                        "url": "http://www.aceyouth.orgß"
+                        "url": "http://www.aceyouth.org"
                     },
                     {
                         "type": "view",
@@ -61,3 +61,19 @@ class wechatConstant(object):
             }
         ]
     }
+
+
+def get_token():
+    return wechatConstants.TOKEN
+
+
+def get_appid():
+    return wechatConstants.APPID
+
+
+def get_appsecret():
+    return wechatConstants.APPSECRET
+
+
+def get_menudata():
+    return wechatConstants.MENU_DATA

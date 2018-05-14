@@ -7,6 +7,7 @@ from apis.operation import api as operation
 from apis.session import api as session
 from apis.SMS import api as SMS
 from apis.user import api as user
+from apis.wechat import api as wechat
 
 api = Api(
     title='ace-youth',
@@ -22,3 +23,4 @@ api.add_namespace(operation)
 api.add_namespace(session)
 api.add_namespace(SMS)
 api.add_namespace(user)
+api.add_namespace(wechat)
