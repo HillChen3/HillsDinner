@@ -1,8 +1,9 @@
 import mysql.connector
+import MySQLdb
 
 
 def get_connection():
-    return mysql.connector.connect(host='localhost', user='root', passwd='daemon', db='aceyouth')
+    return mysql.connector.connect(host='localhost', user='root', passwd='ace123', db='aceyouth')
 
 
 def no_query(input_sql):
@@ -31,6 +32,8 @@ def exec_sql(input_sql, operation_type):
     finally:
         cursor.close()
         conn.close()
+
+
 
 
 def set_response_data(model, values):
