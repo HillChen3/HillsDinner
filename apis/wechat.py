@@ -10,6 +10,7 @@ parser = reqparse.RequestParser()
 api = Namespace('wechat', description='wechat operation')
 query_user = 'SELECT nickname FROM wechatinfo'
 
+
 @api.route('/settings')
 class SetWeChatServer(Resource):
 
@@ -38,13 +39,18 @@ class SetWeChatServer(Resource):
         client.menu.create(menu_data)
         print(client.user.get(openid))
         user = client.user.get(openid)
-        insertdict('wechatinfo',user)
-        # query_single_user = query_user + " WHERE wechat_id ={}".format(openid)
-        # result = db_utils.query(query_single_user)
-        # if result:
-        #     return "user has saved"
-        # else:
-        #     db_utils.insertdict('wechatinfo',user)
+        query_single_user = query_user + " WHERE openid ='{}' ".format(openid)
+        result = db_utils.query(query_single_user)
+        if result:
+            return "user has saved"
+        else:
+            insertdict('wechatinfo',user)
+            return "add user info successfully"
+
+
+
+
+
 # 插入字典到数据库
 def insertdict(tablename, dict):
 
@@ -56,14 +62,14 @@ def insertdict(tablename, dict):
 # 判断表是否存在，存在执行try，不存在执行except新建表，再insert
     try:
         find_table = ("SELECT * FROM %s" % (tablename))
-        add_info = ("INSERT INTO ()%s VALUES (%s)" % (tablename, ROWstr[:-1]))
+        add_info = ("INSERT INTO %s VALUES (%s)" % (tablename, ROWstr[:-1]))
         if db_utils.query(find_table) is not None:
             db_utils.no_query(add_info)
             return "add wechat info successfully"
         else:
             print( "not find table %s" % tablename)
-            create_tables.create_database()
-            return "created table %s" %tablename
+
+            return "please create table %s" %tablename
     except Exception as e:
         return "connection mysql failed"
 
