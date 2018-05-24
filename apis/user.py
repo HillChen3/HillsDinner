@@ -18,6 +18,9 @@ query_user = 'SELECT id, username, nickname, avatar, gender, ' \
              'phone_num, job, wechat_id, constellation, pet_plant, ' \
              'hobbies, fav_event_type, self_intro FROM users'
 
+wechat_info ='SELECT  username, nickname, avatar, gender, ' \
+             'phone_num, job, wechat_id, constellation, pet_plant, ' \
+             'hobbies, fav_event_type, self_intro FROM wechatinfo'
 
 def abort_if_todo_doesnt_exist(api_id):
     if api_id not in APIS:
