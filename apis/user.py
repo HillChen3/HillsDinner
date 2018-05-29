@@ -15,7 +15,7 @@ group_model_reg = api.model('GroupModel', group_model)
 group_user_verify_model_reg = api.model('VerifyModel', group_user_verify_model)
 
 query_user = 'SELECT id, username, nickname, avatar, gender, ' \
-             'phone_num, job, wechat_id, constellation, pet_plant, ' \
+             'phone_num, job, wechat_id, constellation, ' \
              'hobbies, fav_event_type, self_intro FROM users'
 
 wechat_info ='SELECT  username, nickname, avatar, gender, ' \
@@ -48,7 +48,7 @@ class UserList(Resource):
     def post(self):
         add_user = ('INSERT INTO users '
                     '(username, nickname, avatar, gender, '
-                    'phone_num, job, wechat_id, constellation, pet_plant, '
+                    'phone_num, job, wechat_id, constellation, '
                     'hobbies, fav_event_type, self_intro ) values ('
                     '"{}", "{}", "{}", {}, "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}")')
 
@@ -89,7 +89,7 @@ class User(Resource):
             return "can not found this user_id", 204
         update_user = ('UPDATE users '
                        'SET username = "{}", nickname = "{}", avatar = "{}", gender = {}, '
-                       'phone_num = "{}", job = "{}", wechat_id = "{}", constellation = "{}", pet_plant = "{}", '
+                       'phone_num = "{}", job = "{}", wechat_id = "{}", constellation = "{}", '
                        'hobbies = "{}", fav_event_type = "{}", self_intro = "{}" '
                        'WHERE id = {}')
 
