@@ -2,6 +2,7 @@
 
 # constant of wechat
 class wechatConstants:
+    URL = 'http://www.aceyouth.org'
     TOKEN = '123456'
     APPID = 'wx1010fd146b9b290c'
     APPSECRET = '28d394c4e3b83b4145642eec67a5c5d4'
@@ -77,3 +78,7 @@ def get_appsecret():
 
 def get_menudata():
     return wechatConstants.MENU_DATA
+
+
+def get_URL():
+    return wechatConstants.URL

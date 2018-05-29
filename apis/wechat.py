@@ -4,7 +4,7 @@ from flask_restplus import Namespace, reqparse, Resource
 from wechatpy import WeChatClient
 from wechatpy.utils import check_signature
 
-from common import db_utils,create_tables
+from common import db_utils,data_init
 from resource import settings
 parser = reqparse.RequestParser()
 api = Namespace('wechat', description='wechat operation')
