@@ -1,4 +1,8 @@
+import os
+
+from playhouse.shortcuts import model_to_dict, dict_to_model
 import mysql.connector
+from playhouse.db_url import connect
 
 
 def get_connection():
@@ -33,17 +37,3 @@ def exec_sql(input_sql, operation_type):
         conn.close()
 
 
-def set_response_data(model, values):
-    result = []
-    for value in values:
-        tmp = make_dict_by_model(model=model, value=value)
-        print('tmp is : ', tmp)
-        result.append(tmp)
-    return result
-
-
-def make_dict_by_model(model, value):
-    if value:
-        return dict(zip(model.keys(), value))
-    else:
-        return None
