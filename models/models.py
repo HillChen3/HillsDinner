@@ -38,7 +38,7 @@ class User(BaseModel):
     fav_event_type = CharField(null=True)
     self_intro = CharField(null=True)
     register_time = CharField(null=True)
-    status = BooleanField(null=False)
+    status = BooleanField(default=True)
     last_login_time = CharField(null=False)
 
 
@@ -92,3 +92,41 @@ group_user_verify_model = {
     'group_name': fields.String(description='group name'),
     'content': fields.String(description="Why you wanna join", required=True)
 }
+
+#wechat information model
+wechat_user_info_model = {
+    'subscribe': fields.String(),
+    'openid': fields.String(),
+    'nickname': fields.String(),
+    'sex': fields.String(),
+    'language': fields.String(),
+    'city': fields.String(),
+    'province':fields.String(),
+    'country': fields.String(),
+    'headimgurl': fields.String(),
+    'subscribe_time': fields.String(),
+    'remark': fields.String(),
+    'groupid': fields.String(),
+    'tagid_list': fields.String(),
+    'subscribe_scene': fields.String(),
+    'qr_scene': fields.String(),
+    'qr_scene_str': fields.String(),
+}
+
+class WechatUserInfo(BaseModel):
+    subscribe = CharField(null=True)
+    openid = CharField(null=True)
+    nickname = CharField(null=True)
+    sex = CharField(null=True)
+    language = CharField(null=True)
+    city = CharField(null=True)
+    province = CharField(null=True)
+    country = CharField(null=True)
+    headimgurl = CharField(null=True)
+    subscribe_time = CharField(null=True)
+    remark = CharField(null=True)
+    groupid = CharField(null=True)
+    tagid_list = CharField(null=True)
+    subscribe_scene = CharField(null=True)
+    qr_scene = CharField(null=True)
+    qr_scene_str = CharField(null=True)
