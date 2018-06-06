@@ -1,14 +1,14 @@
 from flask_restplus import fields
+from peewee import *
+from playhouse.migrate import *
 
-# user operation model, follow, like etc
-operation_model = {
-    'user_id': fields.String(description="user_id"),
-    'username': fields.String(description='username'),
-    'group_id': fields.String(description="group_id"),
-    'group_name': fields.String(description='group name'),
-    'type': fields.String(description="1 = follow, 2 = like", required=True),
-    'type_name': fields.String(description='follow or like ...')
-}
+db = MySQLDatabase('aceyouth', user='root', password='ace123', host='127.0.0.1', port=3306)
+
+
+class BaseModel(Model):
+    class Meta:
+        database = db
+
 
 # user model, used to save all user information
 user_model = {
@@ -27,6 +27,24 @@ user_model = {
     'self_intro': fields.String(description="introduce yourself")
 }
 
+
+class User(BaseModel):
+    # user model, used to save all user information
+    user_id = CharField(null=True)
+    username = CharField(null=True)
+    nickname = CharField(null=True)
+    avatar = CharField(null=True)
+    gender = CharField(null=True)
+    phone_num = CharField(null=True)
+    job = CharField(null=True)
+    wechat_id = CharField(null=True)
+    constellation = CharField(null=True)
+    pet_plant = CharField(null=True)
+    hobbies = CharField(null=True)
+    fav_event_type = CharField(null=True)
+    self_intro = CharField(null=True)
+
+
 # group model, used to save all group information
 group_model = {
     'group_id': fields.String(description='group_id', required=True),
@@ -37,7 +55,36 @@ group_model = {
     'group_QRCode': fields.String(description='the url for group QRCode'),
     'is_verify_need': fields.Boolean(description='Is user need verify to join this group'),
     'join_question': fields.String(description='Ask a question to newcomer'),
-    'group_desc': fields.String(description='group information')
+    'group_desc': fields.String(description='group information'),
+    'owner_id': fields.String(description='who build this group')
+}
+
+
+class Group(BaseModel):
+    # user model, used to save all user information
+    group_id = CharField(null=True)
+    group_name = CharField(null=True)
+    group_topic = CharField(null=True)
+    build_time = CharField(null=True)
+    event_location = CharField(null=True)
+    group_QRCode = CharField(null=True)
+    is_verify_need = BooleanField(default=False)
+    join_question = CharField(null=True)
+    group_desc = CharField(null=True)
+    owner_id = ForeignKeyField(User, backref='group_owner')
+
+
+db.connect()
+db.create_tables([User, Group])
+
+# user operation model, follow, like etc
+operation_model = {
+    'user_id': fields.String(description="user_id"),
+    'username': fields.String(description='username'),
+    'group_id': fields.String(description="group_id"),
+    'group_name': fields.String(description='group name'),
+    'type': fields.String(description="1 = follow, 2 = like", required=True),
+    'type_name': fields.String(description='follow or like ...')
 }
 
 # user verify model for join a verify needed group

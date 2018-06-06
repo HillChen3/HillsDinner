@@ -1,12 +1,9 @@
-import os
-
-from playhouse.shortcuts import model_to_dict, dict_to_model
 import mysql.connector
-from playhouse.db_url import connect
 
 
 def get_connection():
-    return mysql.connector.connect(host='localhost', user='root', passwd='ace123', db='aceyouth')
+    # return mysql.connector.connect(host='172.31.27.37', port=3306, user='root', passwd='ace123', db='aceyouth')
+    return mysql.connector.connect(host='172.17.0.5', port=3306, user='root', passwd='ace123', db='aceyouth')
 
 
 def no_query(input_sql):
@@ -37,3 +34,17 @@ def exec_sql(input_sql, operation_type):
         conn.close()
 
 
+def set_response_data(model, values):
+    result = []
+    for value in values:
+        tmp = make_dict_by_model(model=model, value=value)
+        print('tmp is : ', tmp)
+        result.append(tmp)
+    return result
+
+
+def make_dict_by_model(model, value):
+    if value:
+        return dict(zip(model.keys(), value))
+    else:
+        return None
