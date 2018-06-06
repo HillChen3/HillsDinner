@@ -17,10 +17,6 @@ user_model_reg = api.model('UserModel', user_model)
 # group_model_reg = api.model('GroupModel', group_model)
 # group_user_verify_model_reg = api.model('VerifyModel', group_user_verify_model)
 
-query_user = 'SELECT id, username, nickname, avatar, gender, ' \
-             'phone_num, job, wechat_id, constellation, pet_plant, ' \
-             'hobbies, fav_event_type, self_intro FROM users'
-
 
 def abort_if_todo_doesnt_exist(api_id):
     if api_id not in APIS:
@@ -52,9 +48,7 @@ class UserList(Resource):
         # 需要检查电话号码格式
         if not utils.check_phone_num(args['phone_num']):
             return "invalid phone num", 422
-        model = User()
-        model = model.create(**args)
-        print(model_to_dict(model))
+        User.create(**args)
         return 'success', 200
 
 
