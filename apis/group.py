@@ -1,7 +1,7 @@
 from flask_restplus import Resource, abort, reqparse, Namespace, fields
 from models.models import group_model, operation_model, group_user_verify_model
 from playhouse.shortcuts import model_to_dict, dict_to_model
-from models.models import Group
+from models.models import Group, User
 from common import db_utils
 
 in_progress = "Interface is still in progress"
@@ -40,10 +40,14 @@ class GroupList(Resource):
         for key, value in group_model.items():
             parser.add_argument(key, type=str, required=True)
         args = parser.parse_args()
+        owner = User.get_or_none(User.id == args['owner_id'])
+        print('owner id is', args['owner_id'], 'result is ', owner, )
+        if not owner:
+            return 'user not found', 422
         args['is_verify_need'] = args['is_verify_need'] == 'True'
         print(args)
-        Group.create(**args)
-        return 'success', 200
+        group_id = Group.insert(args).execute()
+        return 'Group id {} created'.format(group_id), 200
 
 
 @api.route('/<group_id>')
@@ -61,7 +65,7 @@ class SingleGroup(Resource):
     def put(self, group_id):
         print('get ', SingleGroup.get(self, group_id))
         if SingleGroup.get(self, group_id)[1] == 204:
-            return "can not found this group_id", 204
+            return "can not found this group_id", 422
 
         for key, value in group_model.items():
             parser.add_argument(key, type=str, required=True)
@@ -77,7 +81,7 @@ class SingleGroup(Resource):
     def delete(self, group_id):
         delete_group = Group.get_or_none(Group.id == group_id)
         if not delete_group:
-            return "can not found this group_id", 204
+            return "can not found this group_id", 422
         delete_group.delete_instance()
         return 'success', 200
 

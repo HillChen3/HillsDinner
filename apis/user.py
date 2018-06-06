@@ -67,7 +67,7 @@ class SingleUser(Resource):
     def put(self, user_id):
         print('get ', SingleUser.get(self, user_id))
         if SingleUser.get(self, user_id)[1] == 204:
-            return "can not found this user_id", 204
+            return "can not found this user_id", 422
         for key, value in user_model.items():
             parser.add_argument(key, type=str, required=True)
         args = parser.parse_args()
@@ -85,7 +85,7 @@ class SingleUser(Resource):
     def delete(self, user_id):
         delete_user = User.get_or_none(User.id == user_id)
         if not delete_user:
-            return "can not found this user_id", 204
+            return "can not found this user_id", 422
         delete_user.delete_instance()
         return 'success', 200
 

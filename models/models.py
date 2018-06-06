@@ -55,7 +55,8 @@ group_model = {
     'group_QRCode': fields.String(description='the url for group QRCode'),
     'is_verify_need': fields.Boolean(description='Is user need verify to join this group'),
     'join_question': fields.String(description='Ask a question to newcomer'),
-    'group_desc': fields.String(description='group information')
+    'group_desc': fields.String(description='group information'),
+    'owner_id': fields.String(description='who build this group')
 }
 
 
@@ -70,6 +71,7 @@ class Group(BaseModel):
     is_verify_need = BooleanField(default=False)
     join_question = CharField(null=True)
     group_desc = CharField(null=True)
+    owner_id = ForeignKeyField(User, backref='group_owner')
 
 
 db.connect()
