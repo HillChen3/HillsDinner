@@ -1,4 +1,34 @@
 from flask_restplus import fields
+from peewee import *
+from common.db_utils import get_connection
+
+db = MySQLDatabase('aceyouth', user='root', password='ace123', host='127.0.0.1', port=3306)
+
+
+class BaseModel(Model):
+    class Meta:
+        database = db
+
+
+class User(BaseModel):
+    # user model, used to save all user information
+    user_id = CharField(null=True)
+    username = CharField(null=True)
+    nickname = CharField(null=True)
+    avatar = CharField(null=True)
+    gender = CharField(null=True)
+    phone_num = CharField(null=True)
+    job = CharField(null=True)
+    wechat_id = CharField(null=True)
+    constellation = CharField(null=True)
+    pet_plant = CharField(null=True)
+    hobbies = CharField(null=True)
+    fav_event_type = CharField(null=True)
+    self_intro = CharField(null=True)
+
+
+db.connect()
+db.create_tables([User])
 
 # user operation model, follow, like etc
 operation_model = {
