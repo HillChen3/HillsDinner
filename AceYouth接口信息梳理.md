@@ -94,6 +94,8 @@
 
    Nickname姓名:（昵称）
 
+   phone_num注册电话
+
    Gender性别：男女
 
    Job本质工作：

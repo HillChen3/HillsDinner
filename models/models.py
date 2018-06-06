@@ -13,37 +13,33 @@ class BaseModel(Model):
 # user model, used to save all user information
 user_model = {
     'user_id': fields.String(description="user_id", required=True),
-    'username': fields.String(description="username", required=True),
     'nickname': fields.String(description="nickname", required=True),
-    'avatar': fields.String(description="avatar", required=True),
-    'gender': fields.String(description="gender", required=True),
     'phone_num': fields.String(description="phone_num", required=True),
+    'gender': fields.String(description="gender", required=True),
     'job': fields.String(description="tell us what do you do"),
-    'wechat_id': fields.String(description="wechat account"),
-    'wechat_headimg':fields.String(description="wehat headimg"),
-    'constellation': fields.String(description="constellation"),
-    'pet_plant': fields.String(description="dog cat or?"),
-    'hobbies': fields.String(description="what do you like to do?"),
+    'personal_tag': fields.String(description="what's your personal tags?"),
     'fav_event_type': fields.String(description="what event's type do you like?"),
-    'self_intro': fields.String(description="introduce yourself")
+    'self_intro': fields.String(description="introduce yourself"),
+    'register_time': fields.String(description="user register time"),
+    'status': fields.Boolean(description="true means user can use normally, false means cannot use", default=True),
+    'last_login_time': fields.String(description="the time of the user last login")
+
 }
 
 
 class User(BaseModel):
     # user model, used to save all user information
     user_id = CharField(null=True)
-    username = CharField(null=True)
     nickname = CharField(null=True)
-    avatar = CharField(null=True)
-    gender = CharField(null=True)
     phone_num = CharField(null=True)
+    gender = CharField(null=True)
     job = CharField(null=True)
-    wechat_id = CharField(null=True)
-    constellation = CharField(null=True)
-    pet_plant = CharField(null=True)
-    hobbies = CharField(null=True)
+    personal_tag = CharField(null=True)
     fav_event_type = CharField(null=True)
     self_intro = CharField(null=True)
+    register_time = CharField(null=True)
+    status = BooleanField(null=False)
+    last_login_time = CharField(null=False)
 
 
 # group model, used to save all group information
