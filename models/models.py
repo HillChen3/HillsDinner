@@ -2,7 +2,7 @@ from flask_restplus import fields
 from peewee import *
 from playhouse.migrate import *
 
-db = MySQLDatabase('aceyouth', user='root', password='ace123', host='127.0.0.1', port=3306)
+db = MySQLDatabase('aceyouth', user='root', password='daemon', host='127.0.0.1', port=3306)
 
 
 class BaseModel(Model):
@@ -71,8 +71,6 @@ class Group(BaseModel):
     owner_id = ForeignKeyField(User, backref='group_owner')
 
 
-db.connect()
-db.create_tables([User, Group])
 
 # user operation model, follow, like etc
 operation_model = {
@@ -93,7 +91,7 @@ group_user_verify_model = {
     'content': fields.String(description="Why you wanna join", required=True)
 }
 
-#wechat information model
+# wechat information model
 wechat_user_info_model = {
     'subscribe': fields.String(),
     'openid': fields.String(),
@@ -101,7 +99,7 @@ wechat_user_info_model = {
     'sex': fields.String(),
     'language': fields.String(),
     'city': fields.String(),
-    'province':fields.String(),
+    'province': fields.String(),
     'country': fields.String(),
     'headimgurl': fields.String(),
     'subscribe_time': fields.String(),
@@ -112,6 +110,7 @@ wechat_user_info_model = {
     'qr_scene': fields.String(),
     'qr_scene_str': fields.String(),
 }
+
 
 class WechatUserInfo(BaseModel):
     subscribe = CharField(null=True)
@@ -130,3 +129,6 @@ class WechatUserInfo(BaseModel):
     subscribe_scene = CharField(null=True)
     qr_scene = CharField(null=True)
     qr_scene_str = CharField(null=True)
+
+db.connect()
+db.create_tables([User, Group, WechatUserInfo])
