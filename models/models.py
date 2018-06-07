@@ -2,7 +2,7 @@ from flask_restplus import fields
 from peewee import *
 from playhouse.migrate import *
 
-db = MySQLDatabase('aceyouth', user='root', password='daemon', host='127.0.0.1', port=3306)
+db = MySQLDatabase('aceyouth', user='root', password='ace123', host='127.0.0.1', port=3306)
 
 
 class BaseModel(Model):
@@ -93,11 +93,11 @@ group_user_verify_model = {
 
 # wechat information model
 wechat_user_info_model = {
-    'subscribe': fields.String(),
-    'openid': fields.String(),
-    'nickname': fields.String(),
-    'sex': fields.String(),
-    'language': fields.String(),
+    'subscribe': fields.String(description='wechat subscribe'),
+    'openid': fields.String(description='wechat openid'),
+    'nickname': fields.String(description='wechat nickname'),
+    'sex': fields.String(description='wechat sex'),
+    'language': fields.String(description='wechat language'),
     'city': fields.String(),
     'province': fields.String(),
     'country': fields.String(),
