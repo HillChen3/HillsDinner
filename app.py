@@ -1,12 +1,13 @@
 from flask import Flask
-from flask_restplus import Api, fields, Resource, reqparse
+from flask_restplus import fields, Resource, reqparse
+
 from apis import api
+
 
 app = Flask(__name__)
 app.config.SWAGGER_UI_JSONEDITOR = True
 app.config['RESTPLUS_VALIDATE'] = True
 app.config['BUNDLE_ERRORS'] = True
-
 
 @api.route('/Template')
 class Template(Resource):
@@ -28,4 +29,4 @@ class Template(Resource):
 
 api.init_app(app)
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True, port=80)
+    app.run(host="0.0.0.0", debug=True, port=5000)
