@@ -2,7 +2,7 @@ from flask_restplus import fields
 from peewee import *
 from playhouse.migrate import *
 
-db = MySQLDatabase('aceyouth', user='root', password='daemon', host='127.0.0.1', port=3306)
+db = MySQLDatabase('aceyouth', user='root', password='ace123', host='127.0.0.1', port=3306)
 
 
 class BaseModel(Model):
@@ -12,7 +12,7 @@ class BaseModel(Model):
 
 # user model, used to save all user information
 user_model = {
-    'user_id': fields.String(description="user_id", required=True),
+    'id': fields.String(description="user_id", required=True),
     'nickname': fields.String(description="nickname", required=True),
     'phone_num': fields.String(description="phone_num", required=True),
     'gender': fields.String(description="gender", required=True),
@@ -29,7 +29,6 @@ user_model = {
 
 class User(BaseModel):
     # user model, used to save all user information
-    user_id = CharField(null=True)
     nickname = CharField(null=True)
     phone_num = CharField(null=True)
     gender = CharField(null=True)
@@ -44,31 +43,36 @@ class User(BaseModel):
 
 # group model, used to save all group information
 group_model = {
-    'group_id': fields.String(description='group_id', required=True),
+    'id': fields.String(description='group_id', required=True),
+    'group_wallpaper': fields.String(description="wall paper url"),
     'group_name': fields.String(description="group's name", required=True),
     'group_topic': fields.String(description='topic in group', required=True),
     'build_time': fields.String(description='When did group build'),
     'event_location': fields.String(description='online, offline or both'),
     'group_QRCode': fields.String(description='the url for group QRCode'),
+    'group_tag': fields.String(description="What your group main goal"),
     'is_verify_need': fields.Boolean(description='Is user need verify to join this group'),
     'join_question': fields.String(description='Ask a question to newcomer'),
+    'group_intro': fields.String(description='short desc for group'),
     'group_desc': fields.String(description='group information'),
-    'owner_id': fields.String(description='who build this group')
+    'owner': fields.String(description='who build this group')
 }
 
 
 class Group(BaseModel):
     # user model, used to save all user information
-    group_id = CharField(null=True)
+    group_wallpaper = CharField(null=True)
     group_name = CharField(null=True)
     group_topic = CharField(null=True)
     build_time = CharField(null=True)
     event_location = CharField(null=True)
     group_QRCode = CharField(null=True)
+    group_tag = CharField(null=True)
     is_verify_need = BooleanField(default=False)
     join_question = CharField(null=True)
+    group_intro = CharField(null=True)
     group_desc = CharField(null=True)
-    owner_id = ForeignKeyField(User, backref='group_owner')
+    owner = ForeignKeyField(User, backref='groups')
 
 
 

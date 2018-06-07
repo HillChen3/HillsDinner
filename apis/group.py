@@ -1,5 +1,5 @@
 from flask_restplus import Resource, abort, reqparse, Namespace, fields
-from models.models import group_model, operation_model, group_user_verify_model
+from models.models import group_model, operation_model, group_user_verify_model, user_model
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from models.models import Group, User
 from common import db_utils
@@ -7,13 +7,22 @@ from common import db_utils
 in_progress = "Interface is still in progress"
 api = Namespace('group', description="group operation")
 
-# user_model = api.model('UserModel', User)
+user_model = api.model('UserModel', user_model)
 operation_model = api.model('OperationModel', operation_model)
 group_model = api.model('GroupModel', group_model)
 group_user_verify_model = api.model('VerifyModel', group_user_verify_model)
 APIS = {
     'comm-group': {'task': 'manage comm-groups'}
 }
+
+
+def check_owner(args):
+    if not args['owner']:
+        return "owner mustn't be none"
+    owner = User.get_or_none(User.id == args['owner'])
+    if not owner:
+        return 'owner not found'
+    return owner
 
 
 def abort_if_todo_doesnt_exist(api_id):
@@ -40,14 +49,15 @@ class GroupList(Resource):
         for key, value in group_model.items():
             parser.add_argument(key, type=str, required=True)
         args = parser.parse_args()
-        owner = User.get_or_none(User.id == args['owner_id'])
-        print('owner id is', args['owner_id'], 'result is ', owner, )
-        if not owner:
-            return 'user not found', 422
+        owner = check_owner(args)
+        if isinstance(owner, str):
+            return owner, 422
         args['is_verify_need'] = args['is_verify_need'] == 'True'
+        args['owner'] = owner
+        args.pop('id', None)
         print(args)
-        group_id = Group.insert(args).execute()
-        return 'Group id {} created'.format(group_id), 200
+        group = Group.create(**args)
+        return 'Group id {} created'.format(group.id), 200
 
 
 @api.route('/<group_id>')
@@ -65,13 +75,16 @@ class SingleGroup(Resource):
     def put(self, group_id):
         print('get ', SingleGroup.get(self, group_id))
         if SingleGroup.get(self, group_id)[1] == 204:
-            return "can not found this group_id", 422
+            return "can not found this group_id", 204
 
         for key, value in group_model.items():
             parser.add_argument(key, type=str, required=True)
         args = parser.parse_args()
         print(args)
-
+        owner = check_owner(args)
+        if isinstance(owner, str):
+            return owner, 422
+        args['is_verify_need'] = args['is_verify_need'] == 'True'
         update_group = dict_to_model(Group, args)
         update_group.id = group_id
         update_group.save()
@@ -81,20 +94,33 @@ class SingleGroup(Resource):
     def delete(self, group_id):
         delete_group = Group.get_or_none(Group.id == group_id)
         if not delete_group:
-            return "can not found this group_id", 422
+            return "can not found this group_id", 204
         delete_group.delete_instance()
         return 'success', 200
 
 
-@api.route('/<group_id>/user')
+@api.route('/<group_id>/owner')
 class GroupUserList(Resource):
-    # @api.marshal_list_with(user_model)
+    @api.marshal_with(user_model)
     def get(self, group_id):
-        return in_progress, 200
+        group = Group.get_or_none(Group.id == group_id)
+        if not group:
+            return "Can't find this group", 204
+        return group.owner, 200
 
     # @api.doc(body=user_model)
     def post(self, group_id):
         return in_progress, 200
+
+# @api.route('/<group_id>/user')
+# class GroupUserList(Resource):
+#     # @api.marshal_list_with(user_model)
+#     def get(self, group_id):
+#         return in_progress, 200
+#
+#     # @api.doc(body=user_model)
+#     def post(self, group_id):
+#         return in_progress, 200
 
 
 # @api.route('/<group_id>/user/<user_id>')

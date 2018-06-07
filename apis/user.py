@@ -3,7 +3,6 @@ from playhouse.shortcuts import model_to_dict, dict_to_model
 from models.models import operation_model, group_model, group_user_verify_model, user_model
 from models.models import User
 from common import utils, db_utils
-import peewee as pw
 
 parser = reqparse.RequestParser()
 api = Namespace('user', description='users operation')
@@ -14,7 +13,7 @@ APIS = {
 }
 user_model_reg = api.model('UserModel', user_model)
 # operation_model_reg = api.model('OperationModel', operation_model)
-# group_model_reg = api.model('GroupModel', group_model)
+group_model_reg = api.model('GroupModel', group_model)
 # group_user_verify_model_reg = api.model('VerifyModel', group_user_verify_model)
 
 
@@ -45,9 +44,11 @@ class UserList(Resource):
         for key, value in user_model.items():
             parser.add_argument(key, type=str, required=True)
         args = parser.parse_args()
+        print(args)
         # 需要检查电话号码格式
         if not utils.check_phone_num(args['phone_num']):
             return "invalid phone num", 422
+        args.pop('id', None)
         User.create(**args)
         return 'success', 200
 
@@ -85,19 +86,22 @@ class SingleUser(Resource):
     def delete(self, user_id):
         delete_user = User.get_or_none(User.id == user_id)
         if not delete_user:
-            return "can not found this user_id", 422
+            return "can not found this user_id", 204
         delete_user.delete_instance()
         return 'success', 200
 
-#
-# @api.route('/<user_id>/group')
-# class CommGroupByUser(Resource):
-#     @api.marshal_list_with(group_model_reg)
-#     def get(self, user_id):
-#         result = [group_model, group_model]
-#         return result, 200
-#
-#
+
+@api.route('/<user_id>/group')
+class CommGroupByUser(Resource):
+    @api.marshal_list_with(group_model_reg)
+    def get(self, user_id):
+        user = User.get_or_none(User.id == user_id)
+        if not user or not user.groups:
+            return "can't find this user or user don't own any group", 204
+        result = [group for group in user.groups]
+        return result, 200
+
+
 # @api.route('/<user_id>/verify')
 # class VerifyByUser(Resource):
 #     @api.marshal_list_with(group_user_verify_model_reg)
