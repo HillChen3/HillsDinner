@@ -1,7 +1,7 @@
 from flask_restplus import Resource, abort, reqparse, Namespace, fields
 from models.models import group_model, operation_model, group_user_verify_model, user_model
 from playhouse.shortcuts import model_to_dict, dict_to_model
-from models.models import Group, User
+from models.models import Group, User, GroupUserRelation
 
 in_progress = "Interface is still in progress"
 api = Namespace('group', description="group operation")
@@ -108,27 +108,50 @@ class GroupUserList(Resource):
         return group.owner, 200
 
     # @api.doc(body=user_model)
-    def post(self, group_id):
-        return in_progress, 200
-
-# @api.route('/<group_id>/user')
-# class GroupUserList(Resource):
-#     # @api.marshal_list_with(user_model)
-#     def get(self, group_id):
-#         return in_progress, 200
-#
-#     # @api.doc(body=user_model)
-#     def post(self, group_id):
-#         return in_progress, 200
+    # def post(self, group_id):
+    #     return in_progress, 200
 
 
-# @api.route('/<group_id>/user/<user_id>')
-# class GroupUser(Resource):
-#     def delete(self, group_id, user_id):
-#         group_id = reqparse.form['group_id']
-#         return in_progress, 200
-#
-#
+@api.route('/<group_id>/user')
+class GroupUserList(Resource):
+    @api.marshal_list_with(user_model)
+    def get(self, group_id):
+        group = Group.get_or_none(Group.id == group_id)
+        print(model_to_dict(group))
+        if not group:
+            return 'group not found', 204
+        group_user_relations = GroupUserRelation.select().where(
+            GroupUserRelation.group == group, GroupUserRelation.action == 1)
+        return [group.owner] + [relation.user for relation in group_user_relations], 200
+
+
+@api.route('/<group_id>/user/<user_id>')
+class GroupUser(Resource):
+    def put(self, group_id):
+        parser.add_argument('id', type=str, required=True)
+        args = parser.parse_args()
+        user = User.get_or_none(User.id == args['id'])
+        if not user:
+            return 'user not found', 204
+        group = Group.get_or_none(Group.id == group_id)
+        if not group:
+            return 'group not found', 204
+
+        GroupUserRelation.create(user=user, group=group, action=1)
+        return 'success', 200
+
+    def delete(self, group_id, user_id):
+        group = Group.get_or_none(Group.id == group_id)
+        user = User.get_or_none(User.id == user_id)
+        if not group or not user:
+            return 'group or user not found', 204
+        relation = GroupUserRelation.get_or_none(GroupUserRelation.group == group, GroupUserRelation.user == user,
+                                                 GroupUserRelation.action == 1)
+        if not relation:
+            return "user didn't join this group", 204
+        relation.delete_instance()
+        return 'success', 200
+
 # @api.route('/<group_id>/news')
 # class GroupNewsList(Resource):
 #     def get(self, group_id):

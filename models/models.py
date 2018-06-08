@@ -1,8 +1,9 @@
 from flask_restplus import fields
 from peewee import *
 from playhouse.migrate import *
+import datetime
 
-db = MySQLDatabase('aceyouth', user='root', password='daemon', host='127.0.0.1', port=3306)
+db = MySQLDatabase('aceyouth', user='root', password='ace123', host='127.0.0.1', port=3306)
 
 
 class BaseModel(Model):
@@ -64,7 +65,7 @@ class Group(BaseModel):
     group_wallpaper = CharField(null=True)
     group_name = CharField(null=True)
     group_topic = CharField(null=True)
-    build_time = CharField(null=True)
+    build_time = DateTimeField(default=datetime.datetime.today())
     event_location = CharField(null=True)
     group_QRCode = CharField(null=True)
     group_tag = CharField(null=True)
@@ -73,6 +74,13 @@ class Group(BaseModel):
     group_intro = CharField(null=True)
     group_desc = CharField(null=True)
     owner = ForeignKeyField(User, backref='groups')
+
+
+class GroupUserRelation(BaseModel):
+    user = ForeignKeyField(User, backref='group_relation')
+    group = ForeignKeyField(Group, backref='group_relation')
+    action = IntegerField(default=0)  # 1 join, 2 follow, 3 like
+    action_time = DateTimeField(default=datetime.datetime.today())
 
 
 # user operation model, follow, like etc
@@ -168,4 +176,4 @@ class ActivityInfo(BaseModel):
 
 
 db.connect()
-db.create_tables([User, Group, WechatUserInfo])
+db.create_tables([User, Group, WechatUserInfo, GroupUserRelation])
