@@ -8,6 +8,7 @@ from apis.group import api as group
 # from apis.SMS import api as SMS
 from apis.user import api as user
 from apis.wechat import api as wechat
+from apis.activity import api as activity
 
 api = Api(
     title='ace-youth',
@@ -24,3 +25,4 @@ api.add_namespace(group)
 # api.add_namespace(SMS)
 api.add_namespace(user)
 api.add_namespace(wechat)
+api.add_namespace(activity)

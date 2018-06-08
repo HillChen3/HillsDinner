@@ -2,7 +2,7 @@ from flask_restplus import fields
 from peewee import *
 from playhouse.migrate import *
 
-db = MySQLDatabase('aceyouth', user='root', password='daemon', host='127.0.0.1', port=3306)
+db = MySQLDatabase('aceyouth', user='root', password='ace123', host='127.0.0.1', port=3306)
 
 
 class BaseModel(Model):
@@ -147,8 +147,7 @@ activity_info_model = {
     'activity_detail': fields.String(),
     'activity_pictures': fields.String(),
     'activity_required_info': fields.String(),
-    'group_owner': fields.String(description="which group this activity belongs"),
-    'user_joiner': fields.String(description="who joins this activity"),
+    'group': fields.String(description="which group this activity belongs"),
 }
 
 
@@ -163,9 +162,8 @@ class ActivityInfo(BaseModel):
     activity_detail = CharField(null=True)
     activity_pictures = CharField(null=True)
     activity_required_info = CharField(null=True)
-    group_owner = ForeignKeyField(Group, backref='activity')
-    user_joiner = ForeignKeyField(User, backref='join_activity')
+    group = ForeignKeyField(Group, backref='activity')
 
 
 db.connect()
-db.create_tables([User, Group, WechatUserInfo])
+db.create_tables([User, Group, WechatUserInfo, ActivityInfo])
