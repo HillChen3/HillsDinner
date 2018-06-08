@@ -2,7 +2,7 @@ from flask_restplus import fields
 from peewee import *
 from playhouse.migrate import *
 
-db = MySQLDatabase('aceyouth', user='root', password='ace123', host='127.0.0.1', port=3306)
+db = MySQLDatabase('aceyouth', user='root', password='daemon', host='127.0.0.1', port=3306)
 
 
 class BaseModel(Model):
@@ -75,7 +75,6 @@ class Group(BaseModel):
     owner = ForeignKeyField(User, backref='groups')
 
 
-
 # user operation model, follow, like etc
 operation_model = {
     'user_id': fields.String(description="user_id"),
@@ -113,6 +112,7 @@ wechat_user_info_model = {
     'subscribe_scene': fields.String(),
     'qr_scene': fields.String(),
     'qr_scene_str': fields.String(),
+    'user': fields.String(description="which user own this wechat info")
 }
 
 
@@ -133,6 +133,39 @@ class WechatUserInfo(BaseModel):
     subscribe_scene = CharField(null=True)
     qr_scene = CharField(null=True)
     qr_scene_str = CharField(null=True)
+    user = ForeignKeyField(User, backref='wechat')
+
+
+activity_info_model = {
+    'activity_poster': fields.String(description="activity's poster"),
+    'activity_name': fields.String(description="activity name"),
+    'activity_time': fields.String(description="activity holding time"),
+    'activity_deadline': fields.String(description="activity deadline"),
+    'activity_place': fields.String(description="where will hold this activity"),
+    'activity_type': fields.String(description="which type this activity is"),
+    'activity_price': fields.String(description="how much should be pay for this activity"),
+    'activity_detail': fields.String(),
+    'activity_pictures': fields.String(),
+    'activity_required_info': fields.String(),
+    'group_owner': fields.String(description="which group this activity belongs"),
+    'user_joiner': fields.String(description="who joins this activity"),
+}
+
+
+class ActivityInfo(BaseModel):
+    activity_poster = CharField(null=True)
+    activity_name = CharField(null=True)
+    activity_time = CharField(null=True)
+    activity_deadline = CharField(null=True)
+    activity_place = CharField(null=True)
+    activity_type = CharField(null=True)
+    activity_price = CharField(null=True)
+    activity_detail = CharField(null=True)
+    activity_pictures = CharField(null=True)
+    activity_required_info = CharField(null=True)
+    group_owner = ForeignKeyField(Group, backref='activity')
+    user_joiner = ForeignKeyField(User, backref='join_activity')
+
 
 db.connect()
 db.create_tables([User, Group, WechatUserInfo])

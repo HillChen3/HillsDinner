@@ -2,7 +2,6 @@ from flask_restplus import Resource, abort, reqparse, Namespace, fields
 from models.models import group_model, operation_model, group_user_verify_model, user_model
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from models.models import Group, User
-from common import db_utils
 
 in_progress = "Interface is still in progress"
 api = Namespace('group', description="group operation")
