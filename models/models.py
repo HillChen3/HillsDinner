@@ -125,6 +125,7 @@ wechat_user_info_model = {
 
 # group news model
 group_news_model = {
+    'id': fields.String(),
     'context': fields.String(),
     'picture_url': fields.String(),
     'create_time': fields.DateTime(),
