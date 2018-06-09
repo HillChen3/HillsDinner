@@ -2,7 +2,7 @@ from flask_restplus import fields
 from playhouse.migrate import *
 import datetime
 
-db = MySQLDatabase('aceyouth', user='root', password='daemon', host='127.0.0.1', port=3306)
+db = MySQLDatabase('aceyouth', user='root', password='ace123', host='127.0.0.1', port=3306)
 
 
 class BaseModel(Model):
