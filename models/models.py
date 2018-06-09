@@ -1,4 +1,5 @@
 from flask_restplus import fields
+from peewee import *
 from playhouse.migrate import *
 import datetime
 
@@ -122,6 +123,22 @@ wechat_user_info_model = {
     'user': fields.String(description="which user own this wechat info")
 }
 
+# group news model
+group_news_model = {
+    'id': fields.String(),
+    'context': fields.String(),
+    'picture_url': fields.String(),
+    'create_time': fields.DateTime(),
+    'owner': fields.String()
+}
+
+
+class GroupNews(BaseModel):
+    context = CharField(null=True)
+    picture_url = CharField(null=True)
+    create_time = DateTimeField(default=datetime.datetime.today())
+    owner = ForeignKeyField(Group, backref='news')
+
 
 class WechatUserInfo(BaseModel):
     subscribe = CharField(null=True)
@@ -179,4 +196,4 @@ class ActivityUserRelation(BaseModel):
 
 
 db.connect()
-db.create_tables([User, Group, WechatUserInfo, ActivityInfo, GroupUserRelation, ActivityUserRelation])
+db.create_tables([User, Group, WechatUserInfo, ActivityInfo, GroupUserRelation, ActivityUserRelation, GroupNews])
