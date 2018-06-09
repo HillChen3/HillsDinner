@@ -1,5 +1,6 @@
 from flask_restplus import Resource, abort, reqparse, Namespace, fields
-from models.models import group_model, operation_model, group_user_verify_model, user_model
+from models.models import group_model, operation_model, group_user_verify_model, user_model, activity_info_model, \
+    ActivityInfo
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from models.models import Group, User, GroupUserRelation
 
@@ -151,6 +152,26 @@ class GroupUser(Resource):
             return "user didn't join this group", 204
         relation.delete_instance()
         return 'success', 200
+
+
+@api.route('/<group_id>/activity')
+class GroupActivityList(Resource):
+    # @api.marshal_list_with(activity_info_model)
+    def get(self, group_id):
+        group = Group.get_or_none(Group.id == group_id)
+        print(group)
+        # print(model_to_dict(group))
+        if not group:
+            print("group not found")
+            return 'group not found', 204
+        query_single_activity = ActivityInfo.get_or_none(ActivityInfo.group == group_id)
+        if not query_single_activity:
+            return 'no content', 204
+            print("no content")
+        response = model_to_dict(query_single_activity)
+        print(response)
+        return response, 200
+
 
 # @api.route('/<group_id>/news')
 # class GroupNewsList(Resource):

@@ -1,9 +1,8 @@
 from flask_restplus import fields
-from peewee import *
 from playhouse.migrate import *
 import datetime
 
-db = MySQLDatabase('aceyouth', user='root', password='ace123', host='127.0.0.1', port=3306)
+db = MySQLDatabase('aceyouth', user='root', password='daemon', host='127.0.0.1', port=3306)
 
 
 class BaseModel(Model):
@@ -173,5 +172,11 @@ class ActivityInfo(BaseModel):
     group = ForeignKeyField(Group, backref='activity')
 
 
+class ActivityUserRelation(BaseModel):
+    activity = ForeignKeyField(ActivityInfo, backref='activity_relation')
+    user = ForeignKeyField(User, backref='activity_relation')
+    action = IntegerField(default=0)  # 1 join, 2 follow
+
+
 db.connect()
-db.create_tables([User, Group, WechatUserInfo, ActivityInfo, GroupUserRelation])
+db.create_tables([User, Group, WechatUserInfo, ActivityInfo, GroupUserRelation, ActivityUserRelation])

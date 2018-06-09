@@ -1,7 +1,7 @@
 from flask_restplus import Resource, abort, reqparse, Namespace, fields
 from models.models import activity_info_model
 from playhouse.shortcuts import model_to_dict, dict_to_model
-from models.models import Group, ActivityInfo
+from models.models import Group, User,ActivityInfo,ActivityUserRelation
 
 in_progress = "Interface is still in progress"
 api = Namespace('activity', description="activity operation")
@@ -84,3 +84,15 @@ class SingleGroup(Resource):
             return "can not found this group_id", 204
         delete_activity.delete_instance()
         return 'success', 200
+
+
+@api.route('/<activity_id>/user')
+class ActivityUserRelations(Resource):
+    def get(self, activity_id):
+        query_single_activity = ActivityInfo.get_or_none(ActivityInfo.id == activity_id)
+        if not query_single_activity:
+            print("activity not found")
+            return "activity not found", 204
+        acitivity_user_relations = ActivityUserRelation.select().where(ActivityUserRelation.activity == activity_id, ActivityUserRelation.action == 1)
+        print(acitivity_user_relations)
+        return [relation.user for relation in acitivity_user_relations], 200
