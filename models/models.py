@@ -189,5 +189,11 @@ class ActivityInfo(BaseModel):
     group = ForeignKeyField(Group, backref='activity')
 
 
+class ActivityUserRelation(BaseModel):
+    activity = ForeignKeyField(ActivityInfo, backref='activity_relation')
+    user = ForeignKeyField(User, backref='activity_relation')
+    action = IntegerField(default=0)  # 1 join, 2 follow
+
+
 db.connect()
-db.create_tables([User, Group, WechatUserInfo, ActivityInfo, GroupUserRelation, GroupNews])
+db.create_tables([User, Group, WechatUserInfo, ActivityInfo, GroupUserRelation, ActivityUserRelation, GroupNews])

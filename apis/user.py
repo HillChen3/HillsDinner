@@ -1,7 +1,7 @@
 from flask_restplus import Resource, abort, reqparse, Namespace
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from models.models import operation_model, group_model, group_user_verify_model, user_model
-from models.models import User
+from models.models import User, ActivityUserRelation
 from common import utils, db_utils
 
 parser = reqparse.RequestParser()
@@ -14,6 +14,8 @@ APIS = {
 user_model_reg = api.model('UserModel', user_model)
 # operation_model_reg = api.model('OperationModel', operation_model)
 group_model_reg = api.model('GroupModel', group_model)
+
+
 # group_user_verify_model_reg = api.model('VerifyModel', group_user_verify_model)
 
 
@@ -101,6 +103,16 @@ class CommGroupByUser(Resource):
         result = [group for group in user.groups]
         return result, 200
 
+
+@api.route('/<user_id>/activities')
+class CommActivityByUser(Resource):
+    @api.marshal_list_with(group_model_reg)
+    def get(self, user_id):
+        user = User.get_or_none(User.id == user_id)
+        activity_user_relation = ActivityUserRelation.select().where(ActivityUserRelation.user == user)
+        response = [relation.user for relation in activity_user_relation]
+        print(response)
+        return response
 
 # @api.route('/<user_id>/verify')
 # class VerifyByUser(Resource):
