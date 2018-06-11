@@ -19,16 +19,5 @@ parser = reqparse.RequestParser()
 parser.add_argument('type', type=str)
 
 
-@api.route('/like')
-class Like(Resource):
-    @api.marshal_list_with(operation_model)
-    def get(self):
-        return in_progress, 200
 
-
-@api.route('/follow')
-class Follow(Resource):
-    @api.marshal_list_with(operation_model)
-    def get(self):
-        return in_progress, 200
 

@@ -79,18 +79,14 @@ class Group(BaseModel):
 class GroupUserRelation(BaseModel):
     user = ForeignKeyField(User, backref='group_relation')
     group = ForeignKeyField(Group, backref='group_relation')
-    action = IntegerField(default=0)  # 1 join, 2 follow, 3 like
+    action = IntegerField(default=0)  # 1 join, 2 follow, 3 like 4 favorite
     action_time = DateTimeField(default=datetime.datetime.today())
 
 
 # user operation model, follow, like etc
 operation_model = {
-    'user_id': fields.String(description="user_id"),
-    'username': fields.String(description='username'),
-    'group_id': fields.String(description="group_id"),
-    'group_name': fields.String(description='group name'),
-    'type': fields.String(description="1 = follow, 2 = like", required=True),
-    'type_name': fields.String(description='follow or like ...')
+    'user_id': fields.String(description="user_id", required=True),
+    'type': fields.String(description="1 join, 2 follow, 3 like 4 favorite", required=True)
 }
 
 # user verify model for join a verify needed group

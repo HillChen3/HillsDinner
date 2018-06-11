@@ -114,40 +114,7 @@ class CommActivityByUser(Resource):
         print(response)
         return response
 
-# @api.route('/<user_id>/verify')
-# class VerifyByUser(Resource):
-#     @api.marshal_list_with(group_user_verify_model_reg)
-#     def get(self, user_id):
-#         result = [group_user_verify_model, group_user_verify_model]
-#         return result, 200
-#
-#
-# @api.route('/<user_id>/operation')
-# class UserOperationList(Resource):
-#     @api.marshal_list_with(operation_model_reg)
-#     def get(self, user_id):
-#         return in_progress, 200
-#
-#     @api.expect(operation_model)
-#     def delete(self, user_id):
-#         return in_progress, 200
-#
-#
-# @api.route('/<user_id>/operation/<operation_id>')
-# class UserOperation(Resource):
-#     @api.marshal_list_with(operation_model_reg)
-#     def get(self, user_id):
-#         return in_progress, 200
-#
-#     @api.expect(operation_model)
-#     def put(self, user_id):
-#         return in_progress, 200
-#
-#     @api.expect(operation_model)
-#     def delete(self, user_id):
-#         return in_progress, 200
-#
-#
+
 # @api.route('/<user_id>/group/<group_id>/like')
 # class UserLikeGroup(Resource):
 #     @api.marshal_with(operation_model_reg)

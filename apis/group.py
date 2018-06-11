@@ -1,9 +1,8 @@
 from flask_restplus import Resource, abort, reqparse, Namespace, fields
-from models.models import group_model, operation_model, group_user_verify_model, user_model, activity_info_model, \
-    ActivityInfo
-from models.models import group_model, operation_model, group_user_verify_model, user_model, group_news_model
+from models.models import group_model, operation_model, group_user_verify_model, user_model, group_news_model, \
+    activity_info_model
 from playhouse.shortcuts import model_to_dict, dict_to_model
-from models.models import Group, User, GroupUserRelation, GroupNews
+from models.models import Group, User, GroupUserRelation, GroupNews, ActivityInfo
 
 in_progress = "Interface is still in progress"
 api = Namespace('group', description="group operation")
@@ -13,6 +12,7 @@ operation_model = api.model('OperationModel', operation_model)
 group_model = api.model('GroupModel', group_model)
 group_user_verify_model = api.model('VerifyModel', group_user_verify_model)
 group_news_model = api.model('GroupNewsModel', group_news_model)
+activity_info_model = api.model('ActivityInfoModel', activity_info_model)
 APIS = {
     'comm-group': {'task': 'manage comm-groups'}
 }
@@ -128,37 +128,9 @@ class GroupUserList(Resource):
         return [group.owner] + [relation.user for relation in group_user_relations], 200
 
 
-@api.route('/<group_id>/user/<user_id>')
-class GroupUser(Resource):
-    def put(self, group_id):
-        parser.add_argument('id', type=str, required=True)
-        args = parser.parse_args()
-        user = User.get_or_none(User.id == args['id'])
-        if not user:
-            return 'user not found', 204
-        group = Group.get_or_none(Group.id == group_id)
-        if not group:
-            return 'group not found', 204
-
-        GroupUserRelation.create(user=user, group=group, action=1)
-        return 'success', 200
-
-    def delete(self, group_id, user_id):
-        group = Group.get_or_none(Group.id == group_id)
-        user = User.get_or_none(User.id == user_id)
-        if not group or not user:
-            return 'group or user not found', 204
-        relation = GroupUserRelation.get_or_none(GroupUserRelation.group == group, GroupUserRelation.user == user,
-                                                 GroupUserRelation.action == 1)
-        if not relation:
-            return "user didn't join this group", 204
-        relation.delete_instance()
-        return 'success', 200
-
-
 @api.route('/<group_id>/activity')
 class GroupActivityList(Resource):
-    # @api.marshal_list_with(activity_info_model)
+    @api.marshal_list_with(activity_info_model)
     def get(self, group_id):
         group = Group.get_or_none(Group.id == group_id)
         print(group)
@@ -174,30 +146,6 @@ class GroupActivityList(Resource):
         print(response)
         return response, 200
 
-
-# @api.route('/<group_id>/news')
-# class GroupNewsList(Resource):
-#     def get(self, group_id):
-#         return in_progress, 200
-#
-#     def post(self, group_id):
-#         title = reqparse.form['title']
-#         context = reqparse.form['context']
-#         return in_progress, 200
-#
-#
-# @api.route('/<group_id>/news/<news_id>')
-# class GroupNews(Resource):
-#     def get(self, news_id):
-#         return in_progress, 200
-#
-#     def put(self, news_id):
-#         title = reqparse.form['title']
-#         context = reqparse.form['context']
-#         return in_progress, 200
-#
-#     def delete(self, news_id):
-#         return in_progress, 200
 
 @api.route('/<group_id>/news')
 class GroupNewsList(Resource):
@@ -222,7 +170,6 @@ class GroupNewsList(Resource):
             args.pop('create_time', None)
         GroupNews.create(**args)
         return 'success', 200
-
 
 
 #
@@ -267,3 +214,64 @@ class GroupNewsList(Resource):
 #     @api.marshal_list_with(operation_model)
 #     def get(self, group_id):
 #         return in_progress, 200
+
+
+@api.route('/<group_id>/operation')
+@api.expect(operation_model)
+class GroupUserOperation(Resource):
+    error_message = None
+
+    def get_params(self):
+        parser.add_argument('user_id', type=str, required=True)
+        parser.add_argument('type', type=int, required=True)
+        args = parser.parse_args()
+        if not args['type'] or not args['user_id']:
+            self.error_message = 'user_id and type must is required'
+            return
+        return args
+
+    def post(self, group_id):
+        args = self.get_params()
+        if self.error_message:
+            return self.error_message, 422
+        user = User.get_or_none(User.id == args['id'])
+        if not user:
+            return 'user not found', 204
+        group = Group.get_or_none(Group.id == group_id)
+        if not group:
+            return 'group not found', 204
+        if not args['type'] or not 1 <= args['type'] <= 4:
+            return 'type can only be 1 - 4', 422
+        GroupUserRelation.create(user=user, group=group, action=args['type'])
+        return 'success', 200
+
+    def delete(self, group_id):
+        args = self.get_paramas()
+        if self.error_message:
+            return self.error_message, 422
+        group = Group.get_or_none(Group.id == group_id)
+        user = User.get_or_none(User.id == args['user_id'])
+        if not group or not user:
+            return 'group or user not found', 204
+        relation = GroupUserRelation.get_or_none(GroupUserRelation.group == group, GroupUserRelation.user == user,
+                                                 GroupUserRelation.action == args['type'])
+        if not relation:
+            return "user didn't do this operation to the group", 204
+        relation.delete_instance()
+        return 'success', 200
+
+    def get(self, group_id):
+        args = self.get_paramas()
+        if self.error_message:
+            return self.error_message, 422
+        group = Group.get_or_none(Group.id == group_id)
+        user = User.get_or_none(User.id == args['user_id'])
+        if not group or not user:
+            return 'group or user not found', 204
+        relation = GroupUserRelation.get_or_none(GroupUserRelation.group == group, GroupUserRelation.user == user,
+                                                 GroupUserRelation.action == args['type'])
+
+        if not relation:
+            return "user didn't do this operation to the group", 204
+        return 'user did this before', 200
+
