@@ -179,33 +179,7 @@ class GroupNewsList(Resource):
         return 'success', 200
 
 
-@api.route('/news/<news_id>')
-class SingleGroupNews(Resource):
-    @api.marshal_with(group_news_model)
-    def get(self, news_id):
-        group_news = GroupNews.get_or_none(GroupNews.id == news_id)
-        if not group_news:
-            return 'news not find', 204
-        return group_news, 200
 
-    @api.doc(body=group_news_model)
-    def put(self, news_id):
-        for key, value in group_news_model.items():
-            parser.add_argument(key, type=str, required=True)
-        args = parser.parse_args()
-        if not args['create_time']:
-            args.pop('create_time', None)
-        group_news = dict_to_model(GroupNews, args)
-        group_news.id = news_id
-        group_news.save()
-        return 'success', 200
-
-    def delete(self, news_id):
-        group_new = GroupNews.get_or_none(GroupNews.id == news_id)
-        if not group_new:
-            return 'group new not find', 204
-        group_new.delete_instance()
-        return 'success', 200
 #
 #
 # @api.route('/<group_id>/verify')
