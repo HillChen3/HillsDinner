@@ -85,8 +85,11 @@ class GroupUserRelation(BaseModel):
 
 # user operation model, follow, like etc
 operation_model = {
+    'group_id': fields.String(description='group_id', required=True),
+    'group': fields.String(description='group'),
     'user_id': fields.String(description="user_id", required=True),
-    'type': fields.String(description="1 join, 2 follow, 3 like 4 favorite", required=True)
+    'user': fields.String(description='user'),
+    'action': fields.String(description="1 join, 2 follow, 3 like 4 favorite", required=True)
 }
 
 # user verify model for join a verify needed group
