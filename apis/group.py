@@ -35,7 +35,7 @@ def abort_if_todo_doesnt_exist(api_id):
 parser = reqparse.RequestParser()
 
 
-@api.route('/')
+@api.route('')
 class GroupList(Resource):
     @api.marshal_list_with(group_model)
     def get(self):
