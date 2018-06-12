@@ -1,4 +1,4 @@
-from flask import request, current_app, Response
+from flask import request, Response
 from flask_restplus import Namespace, reqparse, Resource
 from wechatpy import WeChatClient
 from wechatpy.utils import check_signature
@@ -40,6 +40,7 @@ class SetWeChatServer(Resource):
         if client.user.get(openid):
             print(client.user.get(openid))
         user = client.user.get(openid)
+        # print(WechatUserInfo.get_or_none(WechatUserInfo.openid == openid))
         if not WechatUserInfo.get(WechatUserInfo.openid == openid):
             wechat_userinfo = dict_to_model(WechatUserInfo, user)
             result = wechat_userinfo.save()
