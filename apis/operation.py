@@ -3,7 +3,7 @@ from models.models import operation_model
 from models.models import User, Group, GroupUserRelation
 from playhouse.shortcuts import model_to_dict, dict_to_model
 
-api = Namespace('Operation', description="like, follow, unlike, unfollow etc")
+api = Namespace('operation', description="like, follow, unlike, unfollow etc")
 operation_model = api.model('OperationModel', operation_model)
 in_progress = "Interface is still in progress"
 
