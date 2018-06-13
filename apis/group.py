@@ -57,6 +57,8 @@ class GroupList(Resource):
         args['is_verify_need'] = args['is_verify_need'] == 'True'
         args['owner'] = owner
         args.pop('id', None)
+        if not args['build_time']:
+            args.pop('build_time', None)
         print(args)
         group = Group.create(**args)
         return 'Group id {} created'.format(group.id), 200
