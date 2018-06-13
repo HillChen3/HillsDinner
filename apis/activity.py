@@ -21,7 +21,7 @@ def check_group(args):
         return group
 
 
-@api.route('/')
+@api.route('')
 class ActivityList(Resource):
     @api.marshal_list_with(activity_info_model)
     def get(self):

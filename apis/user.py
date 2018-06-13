@@ -30,7 +30,7 @@ def set_in_progress_model(args):
     return args
 
 
-@api.route('/')
+@api.route('')
 class UserList(Resource):
     @api.marshal_list_with(user_model_reg)
     def get(self):
