@@ -78,7 +78,7 @@ class GroupUserOperation(Resource):
         print(([relation for relation in result]))
         return result
 
-    @api.expect(operation_model)
+    @api.doc(body=operation_model)
     def post(self):
         args = self.get_params()
         self.check_user_and_group(args)
@@ -111,7 +111,8 @@ class GroupUserOperation(Resource):
         return 'success', 200
 
     @api.marshal_list_with(operation_model)
-    @api.doc(params={'user_id': 'User id', 'group_id': 'Group id', 'action': 'action type'})
+    @api.doc(
+        params={'user_id': 'User id', 'group_id': 'Group id', 'action': '1 join, 2 follow, 3 like 4 favorite 5 verify'})
     def get(self):
         self.get_params()
         if self.error_message:

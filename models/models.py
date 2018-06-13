@@ -55,7 +55,7 @@ group_model = {
     'join_question': fields.String(description='Ask a question to newcomer'),
     'group_intro': fields.String(description='short desc for group'),
     'group_desc': fields.String(description='group information'),
-    'owner': fields.String(description='who build this group')
+    'owner': fields.Nested(user_model, description='who build this group，input id for post method')
 }
 
 
@@ -84,11 +84,11 @@ class GroupUserRelation(BaseModel):
 
 # user operation model, follow, like etc
 operation_model = {
-    'group_id': fields.String(description='group_id', required=True),
+    'group_id': fields.String(description='group_id'),
     'group': fields.String(description='group'),
-    'user_id': fields.String(description="user_id", required=True),
+    'user_id': fields.String(description="user_id"),
     'user': fields.String(description='user'),
-    'action': fields.String(description="1 join, 2 follow, 3 like 4 favorite", required=True)
+    'action': fields.String(description="1 join, 2 follow, 3 like 4 favorite 5 verify")
 }
 
 # user verify model for join a verify needed group
