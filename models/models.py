@@ -2,8 +2,7 @@ from flask_restplus import fields
 from peewee import *
 from playhouse.migrate import *
 import datetime
-
-db = MySQLDatabase('aceyouth', user='root', password='ace123', host='127.0.0.1', port=3306)
+from models.db_local import db
 
 
 class BaseModel(Model):

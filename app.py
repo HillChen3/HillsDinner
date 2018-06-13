@@ -11,6 +11,7 @@ app.config['RESTPLUS_VALIDATE'] = True
 app.config['BUNDLE_ERRORS'] = True
 CORS(app)
 
+
 @api.route('/Template')
 class Template(Resource):
     template_model = api.model('TempModel',

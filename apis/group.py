@@ -40,8 +40,8 @@ class GroupList(Resource):
     @api.marshal_list_with(group_model)
     def get(self):
         result = Group.select()
-        if not result:
-            return 'no content', 204
+        if result:
+            return [], 204
         response = [model_to_dict(group, recurse=True) for group in result]
         print(response)
         return response, 200
