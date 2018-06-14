@@ -55,7 +55,7 @@ group_model = {
     'join_question': fields.String(description='Ask a question to newcomer'),
     'group_intro': fields.String(description='short desc for group'),
     'group_desc': fields.String(description='group information'),
-    'owner': fields.Nested(user_model, description='who build this group，input id for post method')
+    'owner': fields.String(description='who build this group，input id for post method')
 }
 
 

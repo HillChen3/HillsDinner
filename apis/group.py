@@ -3,6 +3,8 @@ from models.models import group_model, operation_model, group_user_verify_model,
     activity_info_model
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from models.models import Group, User, GroupUserRelation, GroupNews, ActivityInfo
+import json
+import pprint
 
 in_progress = "Interface is still in progress"
 api = Namespace('group', description="group operation")
@@ -43,7 +45,7 @@ class GroupList(Resource):
         if not result:
             return [], 204
         response = [model_to_dict(group, recurse=True) for group in result]
-        print(response)
+        pprint.pprint(response)
         return response, 200
 
     @api.doc(body=group_model)
